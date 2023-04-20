@@ -14,7 +14,7 @@ def csv_to_array(filecsv):
         row_data = [] # nyimpen data untuk baris yg lg di proses. 
         # kalo ad jeda baris, ditambahin ke daftar array_csv
         for char in file.read():
-            if char == ',' and not dlmtandapetik:
+            if char == ';' and not dlmtandapetik:
                 if cell_data != '':
                     row_data += [cell_data]
                 cell_data = ''
