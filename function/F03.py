@@ -4,13 +4,6 @@
 # memilih username yang unik dan password untuk jin tersebut. 
 # Jumlah maksimal jin yang bisa di–summon adalah 100.
 
-# len
-def lenn(string):
-    count = 0
-    for i in string:
-        count += 1
-    return count
-
 # ubah csv ke array
 def csv_to_array(filecsv):
     arraybaru = []
@@ -41,7 +34,39 @@ def csv_to_array(filecsv):
             arraybaru += [row_data]
     return arraybaru
 
-array = csv_to_array("usnm.csv")
+# len
+def lenn(str):
+    count = 0
+    for i in str:
+        count += 1
+    return count
+
+# append
+def appendx(listlama, ygmauditambah):
+    listbaru = [None] * (lenn(listlama) + 1)
+    
+    for i in range(lenn(listlama)):
+        listbaru[i] = listlama[i]
+    
+    listbaru[lenn(listlama)] = ygmauditambah
+    
+    return listbaru
+
+# split
+def splitx(str, mark):
+    listbaru = []
+    temp = 0
+
+    for i in range(lenn(str)):
+        if str[i] == mark:
+            listbaru = appendx(listbaru,(str[temp:i]))
+            temp = i + 1  
+
+    listbaru = appendx(listbaru,(str[temp:]))
+
+    return listbaru
+
+user = csv_to_array("usnm.csv")
 
 # algoritma utama
 print("Jenis jin yang dapat dipanggil: ")
@@ -63,14 +88,14 @@ if (jenisjin == 1) or (jenisjin == 2):
         print("Memilih jin “Pembangun”")
         print("")
 
-    file = open("usnm.csv", 'r')
-    jumlahbaris = lenn(list(file))
+    jumlahbaris = lenn(user)
 
     usernamejin = input("Masukkan username jin: ")
     adajin = False
     for i in range (jumlahbaris):
-        if usernamejin in array[i]:
-                    adajin = True
+        for j in range (3):
+            if usernamejin in user[i]:
+                        adajin = True
 
     if adajin == True:
         print("")
@@ -82,10 +107,8 @@ if (jenisjin == 1) or (jenisjin == 2):
             print("Password panjangnya harus 5-25 karakter!")
             passwordjin = input("Masukkan password jin: ")
         else:
-            file.close()
-            with open("usnm.csv", "a", newline="") as read:
-                read.writelines(f'\n{usernamejin},{passwordjin},{kategorijin}')
-            file.close()
+            userbaru = [usernamejin, passwordjin, kategorijin]
+            user = appendx(user, userbaru)
 
             print("")
             print("Mengumpulkan sesajen...")
