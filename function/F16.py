@@ -6,9 +6,9 @@
 def save():
     print("*otw ke function save*")
 
-x = input()
+command = input(">>> ")
 
-if x == "exit":
+if command == "exit":
     validasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
 
     while not ((validasi == "y") or (validasi == "Y") or (validasi == "n") or (validasi == "N")):
