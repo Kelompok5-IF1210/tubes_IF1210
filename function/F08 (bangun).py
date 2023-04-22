@@ -1,8 +1,3 @@
-# Sistem pembangunan candi akan random per jin. Setiap jin akan membangun candi dengan 
-# bahan yang di random untuk setiap candi, artinya bukan dilakukan satu random bahan 
-# kemudian dikalikan dengan jumlah semua jin, tetapi setiap candi di-loop kemudian 
-# dilakukan random bahan, kemudian dijumlahkan.
-
 import random
 
 # bisa pake bahan random dari 1-5
@@ -14,6 +9,17 @@ def lenn(string):
         count += 1
     return count
 
+# append
+def appendx(listlama, ygmauditambah):
+    listbaru = [None] * (lenn(listlama) + 1)
+    
+    for i in range(lenn(listlama)):
+        listbaru[i] = listlama[i]
+    
+    listbaru[lenn(listlama)] = ygmauditambah
+    
+    return listbaru
+
 # ubah csv ke array
 def csv_to_array(filecsv):
     arraybaru = []
@@ -24,7 +30,7 @@ def csv_to_array(filecsv):
         row_data = [] # nyimpen data untuk baris yg lg di proses. 
         # kalo ad jeda baris, ditambahin ke daftar array_csv
         for char in file.read():
-            if char == ',' and not dlmtandapetik:
+            if char == ';' and not dlmtandapetik:
                 if cell_data != '':
                     row_data += [cell_data]
                 cell_data = ''
@@ -44,17 +50,17 @@ def csv_to_array(filecsv):
             arraybaru += [row_data]
     return arraybaru
 
-array = csv_to_array("usnm.csv")
+user = csv_to_array("usnm.csv")
 
 # algoritma utama
-file = open("usnm.csv", 'r')
-jumlahbaris = lenn(list(file))
+jumlahbaris = lenn(user)
 
 # cari jumlah bahan yang dibutuhkan untuk batch bangun
 countjinpembangun = 0
 for i in range (jumlahbaris):
-    if "jin_pembangun" in array[i]:
-        countjinpembangun += 1
+    for j in range (3):
+        if ((user[i][j]) == ("jin_pembangun")):
+            countjinpembangun += 1
 
 if countjinpembangun == 0:
     print("Bangun gagal. Anda tidak punya jin pembangun. Silahkan summon terlebih dahulu.")
@@ -63,28 +69,28 @@ else:
     sumbatu = 0
     sumair = 0
 
-    arraybahan = csv_to_array("bahan_bangunan.csv")
-    arraycandi = csv_to_array("candi.csv")
+    bahan = csv_to_array("bahan_bangunan.csv")
 
-    stockpasir = int(arraybahan[1][2])
-    stockbatu = int(arraybahan[2][2])
-    stockair = int(arraybahan[3][2])
+    stockpasir = int(bahan[1][2])
+    stockbatu = int(bahan[2][2])
+    stockair = int(bahan[3][2])
 
     pasir = [0 for i in range (jumlahbaris)]
     batu = [0 for i in range (jumlahbaris)]
     air = [0 for i in range (jumlahbaris)]
 
     for i in range (jumlahbaris):
-        if "jin_pembangun" in array[i]:
-            usernamejin = array[i][0]
+        for i in range (3):
+            if user[i][j] == "jin_pembangun":
+                usernamejin = user[i][0]
 
-            pasir[i] = random.randint(1,5)
-            batu[i] = random.randint(1,5)
-            air[i] = random.randint(1,5)
+                pasir[i] = random.randint(1,5)
+                batu[i] = random.randint(1,5)
+                air[i] = random.randint(1,5)
 
-            sumpasir += pasir[i]
-            sumbatu += batu[i]
-            sumair += air[i]
+                sumpasir += pasir[i]
+                sumbatu += batu[i]
+                sumair += air[i]
 
     print("Mengerahkan " + str(countjinpembangun) + 
         " jin untuk membangun candi dengan total bahan " + str(sumpasir) + " pasir, " 
@@ -110,30 +116,23 @@ else:
     elif (selisihair < 0):
         print("Bangun gagal. Kurang " + str(sumair-stockair) + " air.")
     else:
-        filecandi = open("candi.csv", 'r')
-        baris1 = filecandi.readline()
-        baris2 = filecandi.readline()
-
-        if baris2 != "":
-            jumlahline = lenn(list(filecandi))
-            idx = int(arraycandi[jumlahline][0])+2
-        if baris2 == "":
+        candi = csv_to_array("candi.csv")
+        if lenn(candi) != 1:
+            idx = int(candi[lenn(candi)][0])+2
+        else:
             idx = 0
 
         print("Jin berhasil membangun total " + str(countjinpembangun) + " candi.")
         
         for i in range (jumlahbaris):
-            if "jin_pembangun" in array[i]:
-                usernamejin = array[i][0]
-                with open("candi.csv", "a", newline="") as read:
-                    read.writelines(f'\n{idx},{usernamejin},{pasir[i]},{batu[i]},{air[i]}')
-            
-                idx += 1
+            for j in range (2):
+                if user[i][j] == "jin_pembangun":
+                    usernamejin = user[i][0]
+                    tambahan = [idx, usernamejin, pasir[i], batu[i], air[i]]
+                    candi = appendx(candi, tambahan)
+                
+                    idx += 1
         
-        with open("bahan_bangunan.csv", "w") as f:
-            f.writelines("nama,deskripsi,jumlah")
-            f.writelines(f'\npasir,deskripsi pasir,{selisihpasir}')
-            f.writelines(f'\nbatu,deskripsi batu,{selisihbatu}')
-            f.writelines(f'\nair,deskripsi air,{selisihair}')
-
-# bikin kurangin bahan dari csv bahan
+        bahan[1][0], bahan[1][1], bahan[1][2] = "pasir", "merekatkan batu", selisihpasir
+        bahan[2][0], bahan[2][1], bahan[2][2] = "batu", "membentuk candi", selisihbatu
+        bahan[3][0], bahan[3][1], bahan[3][2] = "air", "dicampur dengan pasir untuk menjadi perekat", selisihair
