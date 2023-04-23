@@ -130,7 +130,7 @@ else:
         print("Jin berhasil membangun total " + str(countjinpembangun) + " candi.")
         
         for i in range (jumlahbaris):
-            for j in range (2):
+            for j in range (3):
                 if user[i][j] == "jin_pembangun":
                     usernamejin = user[i][0]
                     tambahan = [idx, usernamejin, pasir[i], batu[i], air[i]]
