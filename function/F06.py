@@ -33,9 +33,8 @@ def lenn(string):
     return count
 
 def bangun():
-    candi_data = csv_to_array("candi.csv")
-    bahan_bangunan = csv_to_array("bahan_bangunan.csv")
-    banyak_candi = lenn(candi_data) - 1
+    candi = csv_to_array("candi.csv")
+    bahan_bangunan = csv_to_array("Bahan_bangunan.csv")
     jin_data = csv_to_array("usnm.csv")
     idx_jin = lenn(jin_data)
 
@@ -44,6 +43,7 @@ def bangun():
     for i in range (1, lenn(jin_data)):
         if Nama == jin_data[i][0] and jin_data[i][2] == "jin pembangun":
             Bangun_candi = True
+
     if Bangun_candi == True :
         Butuh_pasir = random.randint(1,5)
         Butuh_batu = random.randint(1,5)
@@ -53,14 +53,17 @@ def bangun():
             bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - Butuh_pasir 
             bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - Butuh_batu
             bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - Butuh_air
-            x = banyak_candi
-            for i in range (x, x+1):
-                candi_data[i][0] = i
-                candi_data[i][1] = Nama
-                candi_data[i][2] = Butuh_pasir
-                candi_data[i][3] = Butuh_batu
-                candi_data[i][4] = Butuh_air
-            sisa = 100 - lenn(candi_data)
+            x = lenn(candi)-1
+            candi_baru =[[" " for spek in range(5)]for jumlah in range (1)]
+            candi_baru[0][0] = x+1
+            candi_baru[0][1] = Nama
+            candi_baru[0][2] = Butuh_pasir
+            candi_baru[0][3] = Butuh_batu
+            candi_baru[0][4] = Butuh_air
+            
+            candi += candi_baru
+
+            sisa = 100 - lenn(candi)+1
             print ("Candi berhasil dibangun")
             print (f"Sisa candi yang perlu di bangun : {sisa}")
         else : 
