@@ -1,3 +1,8 @@
+# Sistem pembangunan candi akan random per jin. Setiap jin akan membangun candi dengan 
+# bahan yang di random untuk setiap candi, artinya bukan dilakukan satu random bahan 
+# kemudian dikalikan dengan jumlah semua jin, tetapi setiap candi di-loop kemudian 
+# dilakukan random bahan, kemudian dijumlahkan.
+
 import random
 
 # bisa pake bahan random dari 1-5
@@ -80,7 +85,7 @@ else:
     air = [0 for i in range (jumlahbaris)]
 
     for i in range (jumlahbaris):
-        for i in range (3):
+        for j in range (3):
             if user[i][j] == "jin_pembangun":
                 usernamejin = user[i][0]
 
