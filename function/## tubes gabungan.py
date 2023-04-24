@@ -25,21 +25,19 @@ def csv_to_array(filecsv):
     arraybaru = []
     with open(filecsv, 'r') as file:
         dlmtandapetik = False   # (cek dia di dalam "" or no)
-        cell_data = '' # simpen data untuk csv yang lg di proses. 
-        # untuk kumpulin karakter dari file sampe koma atau smpe ktmu jeda baris.
-        row_data = [] # nyimpen data untuk baris yg lg di proses. 
-        # kalo ad jeda baris, ditambahin ke daftar array_csv
+        cell_data = '' 
+        row_data = [] 
         for char in file.read():
             if char == ';' and not dlmtandapetik:
                 if cell_data != '':
                     row_data += [cell_data]
-                cell_data = ''
+                cell_data =""
             elif char == '\n' and not dlmtandapetik:
                 if cell_data != '':
                     row_data += [cell_data]
                 arraybaru += [row_data]
                 row_data = []
-                cell_data = ''
+                cell_data =""
             elif char == '"':
                 dlmtandapetik = not dlmtandapetik
             else:
@@ -63,6 +61,16 @@ def splitx(str, mark):
     listbaru = appendx(listbaru,(str[temp:]))
 
     return listbaru
+
+def pindah_matriks(x,y,z):
+    if len(x) < len(y) :
+        a = x
+    else:
+        a = y
+    for i in range (len(a)):
+        for j in range(z):
+            y[i][j] = x[i][j]
+    return y
 
 ### CSV
 user = csv_to_array("user.csv")
@@ -209,8 +217,15 @@ def summonjin ():
 def hapusjin():
     global user
     global candi
+
+    jin = [[" " for spek in range(3)] for jumlah in range(150)]
+    candi_baru = [[" " for spek in range(5)]for jumlah in range (1000)]
     hapus_jin = False
     Nama_jin = input("Masukkan username jin: ")
+
+    pindah_matriks(user,jin,3)
+    pindah_matriks(candi,candi_baru,5)
+
     for i in range (lenn(user)):
         for j in range (3):
             if Nama_jin == user[i][j]: # ngecek nama jin yang mau hapus tuh ada di matriks atau engga
@@ -236,6 +251,8 @@ def hapusjin():
                             candi[y][j] = candi[y+1][j]
 
         print ("Jin telah berhasil dihapus dari alam gaib.")
+        pindah_matriks(jin,user,3)
+        pindah_matriks(candi_baru,candi,5)
     else:
         print("Tidak ada jin dengan username tersebut.")
 
@@ -253,7 +270,8 @@ def bangun():
     banyak_candi = lenn(candi) - 1
     idx_jin = lenn(user)
 
-    Nama = user[idx_jin-1][0]
+    Nama = user[idx_jin-1][0] #buat ini gua baca dari data paling bawah matriks user, bisa ga pas kalo semisal jin pembangun
+                            # login username dia langsung geser jadi ke data yang paling bawah gitu? atau ada saran gimana biar gampang
     Bangun_candi = False
     for i in range (1, lenn(user)):
         if Nama == user[i][0] and user[i][2] == "jin_pembangun":
@@ -268,13 +286,15 @@ def bangun():
             bahan[1][2] = int(bahan[1][2]) - Butuh_batu
             bahan[2][2] = int(bahan[2][2]) - Butuh_air
             x = banyak_candi
-            for i in range (x, x+1):
-                candi[i][0] = i
-                candi[i][1] = Nama
-                candi[i][2] = Butuh_pasir
-                candi[i][3] = Butuh_batu
-                candi[i][4] = Butuh_air
-            sisa = 100 - lenn(candi)
+            candi_baru =[[" " for spek in range(5)]for jumlah in range (1)]
+            candi_baru[0][0] = x+1
+            candi_baru[0][1] = Nama
+            candi_baru[0][2] = Butuh_pasir
+            candi_baru[0][3] = Butuh_batu
+            candi_baru[0][4] = Butuh_air
+            candi += candi_baru
+
+            sisa = 100 - banyak_candi
             print ("Candi berhasil dibangun.")
             print (f"Sisa candi yang perlu di bangun : {sisa}.")
         else : 
