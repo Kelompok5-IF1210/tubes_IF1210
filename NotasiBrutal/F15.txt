@@ -1,0 +1,68 @@
+procedure help (input role:str)
+{Memberi list menu yang dapat dipilih sesuai dengan role
+I.S. role terdefinisi
+F.S. menu help sesuai dengan role tercetak pada layar}
+
+KAMUS LOKAL
+
+
+ALGORITMA
+    output("=========== HELP ===========")
+    depend on (role)
+        role='':
+            output("1. login")
+            output("   Untuk masuk menggunakan akun")
+            output("2. exit")
+            output("   Untuk keluar dari program dan kembali ke terminal")
+            output("3. save")
+            output("   Untuk menyimpan data permainan")
+        role="bandung_bondowoso":
+            output("1. logout") 
+            output("   Untuk keluar dari akun yang digunakan sekarang") 
+            output("2. summonjin") 
+            output("   Untuk memanggil jin") 
+            output("3. hapusjin") 
+            output("   Untuk menghapus jin")
+            output("4. ubahjin") 
+            output("   Untuk mengubah tipe jin")
+            output("5. batchkumpul") 
+            output("   Untuk mengerahkan semua jin pengumpul mengumpulkan bahan")
+            output("6. batchbangun") 
+            output("   Untuk mengerahkan semua jin pembangun membangun candi")
+            output("7. laporanjin") 
+            output("   Untuk mengambil laporan kinerja jin")          
+            output("8. laporancandi") 
+            output("   Untuk mengetahui progress pembangunan candi")
+            output("9. exit")
+            output("   Untuk keluar dari program dan kembali ke terminal")       
+            output("10. save")
+            output("   Untuk menyimpan data permainan")
+        role="roro_jonggrang":
+            output("1. logout") 
+            output("   Untuk keluar dari akun yang digunakan sekarang") 
+            output("2. hancurkancandi") 
+            output("   Untuk menghancurkan candi yang tersedia ")
+            output("3. ayamberkokok") 
+            output("   Untuk menyelesaikan permainan")
+            output("4. exit")
+            output("   Untuk keluar dari program dan kembali ke terminal")
+            output("5. save")
+            output("   Untuk menyimpan data permainan")
+        role="jin_pengumpul":
+            output("1. logout") 
+            output("   Untuk keluar dari akun yang digunakan sekarang") 
+            output("2. kumpul") 
+            output("   Untuk mengumpulkan resource candi")
+            output("3. exit")
+            output("   Untuk keluar dari program dan kembali ke terminal")
+            output("4. save")
+            output("   Untuk menyimpan data permainan") 
+        role="jin_pembangun":
+            output("1. logout") 
+            output("   Untuk keluar dari akun yang digunakan sekarang") 
+            output("2. bangun") 
+            output("   Untuk membangun candi")
+            output("3. exit")
+            output("   Untuk keluar dari program dan kembali ke terminal")
+            output("4. save")
+            output("   Untuk menyimpan data permainan")

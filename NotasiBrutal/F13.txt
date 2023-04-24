@@ -1,0 +1,52 @@
+function load() -> str
+{Mengembalikan lokasi folder berisi CSV yang akan digunakan selama permainan jika nama folder terdefinisi}    
+
+KAMUS LOKAL
+    type ArgumentParser
+    {Terdefinisi tipe bawaan}
+
+    type args
+    {Terdefinisi tipe bawaan}
+
+    parser: ArgumentParser
+    args: args
+    folder_name: str
+
+    function exit()
+    {Terdefinisi fungsi bawaan untuk keluar dari program}
+
+    procedure add_argument(input parser:ArgumentParser, input folder_name:str, input nargs:str, input help:str)
+    {Terdefinisi fungsi bawaan untuk menambah argumen folder_name pada input terminal}
+
+    function parse_args(parser:ArgumentParser) -> args
+    {Terdefinisi fungsi bawaan untuk mengembalikan argumen dalam parser}
+
+    function os.path.isdir(folder_name: str) -> bool
+    {Terdefinisi fungsi bawaan untuk memeriksa keberadaan folder pada path}
+
+ALGORITMA
+    parser <- ArgumentParser(argparse)
+    add_argument(parser, "folder_name", '?', 'specify your game data location') 
+    args <- parse_args(parser)
+
+    -- Menyimpan argumen folder_name pada args ke variabel folder_name
+    folder_name <- args.folder_name
+
+    depend on (folder_name)
+        folder_name=None:
+            output("\nTidak ada nama folder yang diberikan!\n")
+            output("Usage: python main.py <nama_folder>")
+            exit()
+
+        os.path.isdir(folder_name):
+            output("\nLoading...\n")
+            output("Selamat datang di program \"Manajerial Candi\"")
+        
+            os.path.isdir(folder_name):
+                -> "save/"+folder_name
+            else: "save/"+folder_name
+                -> "save/"+folder_name
+    
+        otherwise: -- not(os.path.isdir(folder_name))
+            output("\nFolder \""+folder_name+"\" tidak ditemukan.")
+            exit() 

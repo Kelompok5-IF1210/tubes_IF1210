@@ -1,0 +1,67 @@
+function read_csv(path_csv:str) -> tuple
+{Menyimpan data csv ke dalam sebuah matriks, memberi MARK di akhir pembacaan, dan mengembalikan matriks beserta jumlah efektif}
+
+KAMUS LOKAL
+    constant mark: str =""
+    constant NMax: int = 200
+
+    type Mtx: array[0..NMax] of arrray[0..(count_delimiter-1)] of str
+    type tuple: <mtx: Mtx;
+                NEff: int>
+
+    count, count_delimiter, mtx_idx, arr_idx: int
+    line, char, str_temp: str
+    arr_temp: array[0..(count_delimiter-1)] of str
+    mtx: Mtx
+
+    file: SEQFILE of
+        (*) content: str
+        (1) mark
+
+# ALGORITMA
+    open(file, path_csv)
+    # tanda hitung line dalam csv
+    count=0
+
+    for line in file:
+        # header
+        if count=0 then
+            count <- count+1
+
+            # menentukan panjang array yang diperlukan untuk menyimpan suatu line
+            count_delimiter <- 0
+            for char in line:
+                if char=";" then
+                    count_delimiter <- count_delimiter+1
+            # inisialisasi matriks
+            mtx <- [["" for i in range (count_delimiter+1)] for i in range (1000)]
+            mtx_idx <- count-1
+
+        # body
+        else
+            str_temp <- ""
+            arr_temp <-["" for i in range (count_delimiter+1)]
+            # indeks dari arr_temp
+            arr_idx <- 0
+            mtx_idx <- count-1
+
+            for char in range (len(line)):
+                if line[char]=";" || line[char]="\n" then
+                    arr_temp[arr_idx] <- str_temp
+                    arr_idx <- arr_idx+1
+                    str_temp <- ""
+                else
+                    str_temp <- str_temp +line[char]
+
+            mtx[mtx_idx] <- arr_temp
+            count <- count+1
+        
+    # antisipasi csv hanya berisi header
+    # antisipasi csv diakhiri newline
+    if mtx_idx!=0 && mtx[mtx_idx]=["" for i in range (count_delimiter+1)]:
+        mtx_idx <- -1
+    
+    # beri MARK di akhir pembacaan
+    mtx[mtx_idx]=["MARK" for i in range(count_delimiter+1)]
+    
+    -> (mtx, mtx_idx+1)
