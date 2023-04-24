@@ -73,7 +73,7 @@ def read_csv(path_csv:str) -> tuple:
 '''___________________________________________________BREAKDOWN___________________________________________________'''
 
 # F01
-def login(users:effective, user_now:str, role_now: str):
+def login(users:effective, user_now:str, role_now: str) -> tuple:
     # login status
     if role_now=="": 
         belumlogin=True
@@ -120,8 +120,100 @@ def login(users:effective, user_now:str, role_now: str):
     elif (belumlogin == False):
         print("Login gagal!")
         print("Anda telah login dengan username " + user_now + ", silahkan lakukan “logout” sebelum melakukan login kembali.")  
-        
+
     return (user_now, role_now, not(belumlogin))
+
+# F02
+def logout(username:str, role:str, isLoggedIn:bool) -> tuple:
+    if (isLoggedIn==True):
+        isLoggedIn = False
+        username=""
+        role=""
+        print("Berhasil logout")
+    else:
+        print("Logout gagal!")
+        print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
+    
+    return (username, role, isLoggedIn)
+
+# F03
+def summonjin(users:effective) -> list:
+    # Bandung Bondowoso memiliki wewenang memanggil jin dari dunia lain. 
+    # Bandung Bondowoso bisa memilih jenis jin yang ingin dipanggil. 
+    # Jin harus bisa login untuk melakukan tugasnya sehingga Bondowoso harus 
+    # memilih username yang unik dan password untuk jin tersebut. 
+    # Jumlah maksimal jin yang bisa di–summon adalah 100.
+
+    # ALGORITMA
+    # validasi role dan jumlah jin < 100 ada di main.py
+    # role=="bandung_bondowoso" and jumlah_jin<100
+    print("Jenis jin yang dapat dipanggil: ")
+    print("(1) Pengumpul - Bertugas mengumpulkan bahan bangunan")
+    print("(2) Pembangun - Bertugas membangun candi")
+    print("")
+
+    jenisjin = int(input("Masukkan nomor jenis jin yang ingin dipanggil: "))
+
+    # jenisjin validation loop
+    while not(jenisjin == 1) or (jenisjin == 2):
+        print("Tidak ada jenis jin bernomor " + "“" + str(jenisjin) + "”!")
+        jenisjin = int(input("Masukkan nomor jenis jin yang ingin dipanggil: "))
+
+    if (jenisjin == 1) or (jenisjin == 2):
+        # assign role
+        if jenisjin == 1:
+            kategorijin = "jin_pengumpul"
+            print("")
+            print("Memilih jin “Pengumpul”")
+            print("")
+        elif jenisjin == 2:
+            kategorijin = "jin_pembangun"
+            print("")
+            print("Memilih jin “Pembangun”")
+            print("")
+
+        # mtx_user: [username, password, role]
+        mtx_user=users.mtx
+        len_user=users.NEff
+
+        usernamejin = input("Masukkan username jin: ")
+        adajin = False
+
+        # usernamejin validation loop
+        # check overlapping username
+        for i in range (len_user):
+            if usernamejin in mtx_user[i][0]:
+                        adajin = True
+
+        while (adajin == True):
+            print("")
+            print("Username " + usernamejin + " sudah diambil!")
+            usernamejin = input("Masukkan username jin: ")
+
+            # re-check overlapping username
+            adajin = False
+            for i in range (len_user):
+                if usernamejin in mtx_user[i][0]:
+                            adajin = True
+
+        if (adajin==False):
+            passwordjin = input("Masukkan password jin: ")
+
+            # len passwordjin validation loop
+            while (len(passwordjin) < 5) or (len(passwordjin) > 25):
+                print("")
+                print("Password panjangnya harus 5-25 karakter!")
+                passwordjin = input("Masukkan password jin: ")
+
+            if (5<=len(passwordjin)<=25):
+                print("")
+                print("Mengumpulkan sesajen...")
+                print("Menyerahkan sesajen...")
+                print("Membacakan mantra...")
+                print("")
+                print("Jin " + usernamejin + " berhasil dipanggil!")       
+
+    return [usernamejin, passwordjin, kategorijin]
 
 # F13
 def load() -> str:   
