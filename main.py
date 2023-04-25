@@ -1,4 +1,4 @@
-from commands import read_csv, load, login, logout, summonjin, help
+from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, hancurkancandi, ayamberkokok, help
 from Type import effective
 
 # MAIN PROGRAM
@@ -8,7 +8,7 @@ path=load()
 # if load() success
 users=effective(read_csv(path+"/user.csv")[0], read_csv(path+"/user.csv")[1])
 candi=effective(read_csv(path+"/candi.csv")[0], read_csv(path+"/candi.csv")[1])
-bahan_bangunan=effective(read_csv(path+"/bahan_bangunan.csv")[0], read_csv(path+"/bahan_bangunan.csv")[1])
+bahan_bangunan=trans_bahan(effective(read_csv(path+"/bahan_bangunan.csv")[0], read_csv(path+"/bahan_bangunan.csv")[1]))
 
 # status
 (username, role, isLoggedIn)=('','',False)
@@ -19,13 +19,16 @@ while True:
     if menu=="login":
         # F01
         (username,role,isLoggedIn)=login(users, username, role)
+
     elif menu=="logout":
         # F02
         (username,role,isLoggedIn)=logout(username, role, isLoggedIn)
+
     elif menu=="summonjin":
         # F03
         if role!="bandung_bondowoso":
             print("Eits, kamu bukan Bandung Bondowoso!")
+
         else: # role=="bandung_bondowoso"
             if (users.NEff)-2==100:
                 print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu")
@@ -33,25 +36,29 @@ while True:
                 # users.mtx=[username,password,role]
                 # asumsi tidak ada matrix yang kosong di tengah karena hapusjin() akan menggeser urutan setelah menghapus
                 # menggeser MARK
-                print("BEFORE\n", users.mtx)
                 users.mtx[(users.NEff)+1]=users.mtx[(users.NEff)]
-                print("MARK UPDATE\n", users.mtx)
+                
                 # menyisipkan jin baru
                 users.mtx[(users.NEff)]=summonjin(users)
-                print("NEW UPDATE\n", users.mtx)
+                
                 # memperbarui user efektif
                 users.NEff+=1
-                print("NEFF UPDATE\n", users.NEff)
-
+                
     elif menu=="hapusjin":
         # F04
-        pass
+        if role!="bandung_bondowoso":
+            print("Eits, kamu bukan Bandung Bondowoso!")
+        else:
+            (users,candi)=hapusjin(users,candi)
+
     elif menu=="ubahjin":
         # F05
-        pass
+        users=ubahjin(role,users)
+
     elif menu=="bangun":
         # F06
-        pass
+        (users,candi,bahan_bangunan)=bangun(users,candi,bahan_bangunan, username, role)
+
     elif menu=="kumpul":
         # F07
         pass
@@ -67,12 +74,15 @@ while True:
     elif menu=="laporancandi":
         # F10
         pass
+
     elif menu=="hancurkancandi":
         # F11
-        pass
+        candi=hancurkancandi(role, candi)
+
     elif menu=="ayamberkokok":
         # F12
-        pass
+        ayamberkokok(role, candi)
+
     elif menu=="save":
         # F14
         pass

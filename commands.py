@@ -4,14 +4,14 @@ from Type import effective
 
 # PRIMITIF
 # len matrix
-def mtx_len(matrix, mark) -> int:
+def mtx_len(matrix:list, mark:list) -> int:
     iterate=-1
     while True:
         if matrix[iterate+1]==mark:
             break
         else:
             iterate+=1
-    return iterate
+    return iterate+1
 
 # len of array in a determined matrix
 def det_arr_len(var:str) -> int:
@@ -21,9 +21,44 @@ def det_arr_len(var:str) -> int:
         return 5
     elif var=="bahan_bangunan":
         return 3
+    
+# find index from an array
+def find_idx(search:str, mtx:list[list], idx:int) -> int:
+    # asumsi pasti ada
+    # idx: bagian array dalam matrix
+    for i in range (mtx_len(mtx,"MARK")):
+        if mtx[i][idx]==search:
+            return i
+
+# recursive
+# mencari ID yang kosong
+def find_ID(candi:effective, current:int) -> int:
+    for i in range (candi.NEff):
+        if candi.mtx[i][0]==str(current):
+            return find_ID(candi,current+1)
+    return current
+
+# recursive
+# menghapus salah satu anggota lalu menggeser array
+def del_mtx(mtx:list, idx:int, length:int) -> list:
+    if idx<=length:
+        mtx[idx]=mtx[idx+1]
+        return del_mtx(mtx,idx+1,length)
+    else:
+        return mtx
+    
+# recursive
+# menyisipkan candi sesuai ID agar tetap berurut
+def sisip_mtx(sisip:list, mtx:list, idx:int, length:int) -> list:
+    if length>=idx:
+        mtx[length+1]=mtx[length]
+        return sisip_mtx(sisip,mtx,idx,length-1)
+    else: 
+        mtx[length+1]=sisip
+        return mtx
 
 # read csv
-def read_csv(path_csv:str) -> tuple:
+def read_csv(path_csv:str) -> tuple[list,int]:
     file = open(path_csv,'r')
     # count line
     count=0
@@ -61,19 +96,37 @@ def read_csv(path_csv:str) -> tuple:
             mtx[mtx_idx]=arr_temp
             count+=1
         
-    # antisipasi csv hanya berisi header
-    # antisipasi csv diakhiri newline
-    if mtx_idx!=0 and mtx[mtx_idx-1]==["" for i in range (count_delimiter+1)]:
+    # csv hanya berisi header: mtx_idx=0
+    # asumsi csv diakhiri newline
+    if mtx[mtx_idx-1]==["" for i in range (count_delimiter+1)]:
         mtx_idx-=1
     
     mtx[mtx_idx+1]=["MARK" for i in range(count_delimiter+1)]
     
     return (mtx, mtx_idx+1)
 
+def trans_bahan(bahan:effective) -> list[list]:
+    # bahan.mtx: [nama,deskripsi,jumlah]
+    # nama -> pasir -> batu -> air
+
+    # inisialisasi return matriks
+    bahan_bangunan=[["" for i in range (3)] for i in range (3)]
+
+    # load dalam keadaan kosong
+    if bahan.mtx[0]==["MARK","MARK","MARK"]:
+        bahan_bangunan[0]=["pasir", "adalah pasir", "0"]
+        bahan_bangunan[1]=["batu", "adalah batu", "0"]
+        bahan_bangunan[2]=["air", "adalah air", "0"]
+    else:
+        bahan_bangunan[0]=bahan.mtx[0]
+        bahan_bangunan[1]=bahan.mtx[1]
+        bahan_bangunan[2]=bahan.mtx[2]
+    return bahan_bangunan
+
 '''___________________________________________________BREAKDOWN___________________________________________________'''
 
 # F01
-def login(users:effective, user_now:str, role_now: str) -> tuple:
+def login(users:effective, user_now:str, role_now: str) -> tuple[str,str,bool]:
     # login status
     if role_now=="": 
         belumlogin=True
@@ -124,7 +177,7 @@ def login(users:effective, user_now:str, role_now: str) -> tuple:
     return (user_now, role_now, not(belumlogin))
 
 # F02
-def logout(username:str, role:str, isLoggedIn:bool) -> tuple:
+def logout(username:str, role:str, isLoggedIn:bool) -> tuple[str,str,bool]:
     if (isLoggedIn==True):
         isLoggedIn = False
         username=""
@@ -137,7 +190,7 @@ def logout(username:str, role:str, isLoggedIn:bool) -> tuple:
     return (username, role, isLoggedIn)
 
 # F03
-def summonjin(users:effective) -> list:
+def summonjin(users:effective) -> list[str,str,str]:
     # Bandung Bondowoso memiliki wewenang memanggil jin dari dunia lain. 
     # Bandung Bondowoso bisa memilih jenis jin yang ingin dipanggil. 
     # Jin harus bisa login untuk melakukan tugasnya sehingga Bondowoso harus 
@@ -213,7 +266,191 @@ def summonjin(users:effective) -> list:
                 print("")
                 print("Jin " + usernamejin + " berhasil dipanggil!")       
 
+    # edit ke effective (termasuk NEff) ada di main.py
     return [usernamejin, passwordjin, kategorijin]
+
+# F04
+def hapusjin(jin:effective, candi:effective) -> tuple[effective,effective]:
+    hapus_jin = False
+    Nama_jin = input("Masukkan username jin: ")
+
+    # jin.mtx: [username,password,role]
+    for i in range (jin.NEff):
+            # ngecek nama jin yang mau hapus tuh ada di matriks atau engga
+            if Nama_jin == jin.mtx[i][0] and (jin.mtx[i][2]=="jin_pembangun" or jin.mtx[i][2]=="jin_pengumpul"): 
+                hapus_jin = True
+                x = i
+                break
+
+    if hapus_jin == True :
+        for i in range (x, jin.NEff+1): # untuk ngapus jin dari matriks jin
+                jin.mtx[i] = jin.mtx[i+1] 
+                # menggeser jin ke kiri mulai dari matriks yang dihapus
+                # hingga satu indeks setelah MARK
+        jin.NEff-=1 # update NEff user
+
+        # candi.mtx: [id,pembuat,pasir,batu,air]
+        count = 0
+        for i in range (candi.NEff): # untuk ngecek ada berapa candi yang dibangun oleh jin yang mau dihapus
+            if Nama_jin == candi.mtx[i][1]:
+                count +=1
+
+        while count != 0 : # ngeloop sampe semua candi kehapus
+            count -= 1
+            for i in range (candi.NEff): 
+                if Nama_jin == candi.mtx[i][1]:
+                    x = i
+                    for j in range (x, candi.NEff+1): # ngegeser matriks candi
+                        candi.mtx[j] = candi.mtx[j+1]
+                    candi.NEff-=1 # update NEff candi
+
+        print ("Jin telah berhasil dihapus dari alam gaib.")
+
+    else: # hapus_jin==False
+        print("Tidak ada jin dengan username tersebut.")
+
+    return (jin, candi)
+
+# F05
+def ubahjin(role:str, user:effective) -> effective:
+    if role!="bandung_bondowoso":
+        print("Kamu tidak memiliki akses ke fitur ini!")
+    else:
+        nama = str(input("Masukkan username jin : "))  
+    
+        x = False
+        # JIN SEARCHER
+        for i in range (2, user.NEff):
+            if nama == user.mtx[i][0]:
+                x = True
+    
+        if x == True:
+            for i in range (2,user.NEff):
+                if nama == user.mtx[i][0]:
+                    # ROLE CHANGE
+                    inputSalah = True
+                    while inputSalah: 
+                        confirm = input("Apakah anda ingin mengubah role jin terserbut? (y/n): ")
+                        
+                        if confirm == "y":
+                            inputSalah = False
+                            if user.mtx[i][2] == "jin_pembangun":
+                                user.mtx[i][2] = "jin_pengumpul"
+                            elif user.mtx[i][2] == "jin_pengumpul" :
+                                user.mtx[i][2] = "jin_pembangun"
+                            print("Jin berhasil diubah")
+                        
+                        # APABILA USER MENGDECLINE
+                        elif confirm == "n":
+                            inputSalah = False
+                            print("Jin tidak jadi diubah")
+
+        else: # x==False
+            print("Tidak ada jin dengan username tersebut.")
+
+    # OUTPUT
+    return user
+
+# F06
+def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:str) -> tuple[effective,effective,list[list]]:
+    import random
+    # update bahan, update NEff candi, cari ID terkecil candi, geser MARK candi, masukkan candi
+
+    Bangun_candi = False
+    # cek role
+    if role=="jin_pembangun":
+        Bangun_candi = True
+
+    if Bangun_candi == True :
+        Butuh_pasir = random.randint(1,5)
+        Butuh_batu = random.randint(1,5)
+        Butuh_air = random.randint(1,5)
+            
+        # cek persediaan
+        # bahan: [nama,deskripsi,jumlah]
+        # nama -> pasir -> batu -> air
+        if Butuh_pasir <= int(bahan[0][2]) and Butuh_batu <= int(bahan[1][2]) and Butuh_air <= int(bahan[2][2]):
+            # update bahan
+            bahan[0][2] = int(bahan[0][2]) - Butuh_pasir 
+            bahan[1][2] = int(bahan[1][2]) - Butuh_batu
+            bahan[2][2] = int(bahan[2][2]) - Butuh_air
+
+            banyak_candi = candi.NEff
+            if banyak_candi==100:
+                sisa=0
+            else:
+                # update NEff candi
+                candi.NEff+=1
+                sisa=100-(banyak_candi+1)
+
+                # cari ID terkecil
+                ID_candi=find_ID(candi, 1)
+
+                # candi.mtx: [id,pembuat,pasir,batu,air]
+                # sisipkan candi
+                candi.mtx=sisip_mtx([ID_candi, username, Butuh_pasir, Butuh_batu, Butuh_air],candi.mtx,ID_candi-1,candi.NEff)
+
+            print ("Candi berhasil dibangun.")
+            print (f"Sisa candi yang perlu di bangun : {sisa}.")
+
+        else : 
+            print("Bahan bangunan tidak mencukupi")
+            print ("Candi tidak bisa dibangun.")
+
+    else :
+        print("Role anda tidak memiliki akses membangun candi.")
+    
+    return (user, candi, bahan)
+
+# F11
+def hancurkancandi(role:str, candi:effective) -> effective:
+    if role!="roro_jonggrang":
+        print("Kamu tidak memiliki akses fitur ini!")
+    else:
+        id = int(input("Masukkan ID Candi: "))
+
+        Cekcandi = False
+        Cekpanjang = candi.NEff
+
+        for i in range (Cekpanjang):
+            if candi.mtx[i][0] == str(id):
+                Cekcandi = True
+                break
+        
+        if Cekcandi == False:
+            print("Tidak ada candi dengan ID tersebut")
+        else:
+            Se7 = input(f"Apakah anda yakin ingin menghancurkan candi ID: {id} (Y/N)? ")
+            if Se7 == "Y":
+                for i in range (candi.NEff): 
+                    if candi.mtx[i][0] == id:
+                        candi.mtx = del_mtx(candi.mtx,i,candi.NEff) # geser candi
+                        candi.NEff-=1 # update NEff candi
+                print("Candi telah berhasil dihancurkan.")
+
+            else:
+                print("Candi tidak jadi dihancurkan.")
+
+    return candi
+
+# F12
+def ayamberkokok(role:str, candi:effective) -> None:
+    if role!="roro_jonggrang":
+        print("Kamu tidak punya akses ke fitur ini")
+    else:
+        Totcan = (candi.NEff)
+        if Totcan != 100:
+            print("Kukuruyuk.. Kukuruyuk..")
+            print("Jumlah Candi: " + str(Totcan))
+            print("Selamat, Roro Jonggrang memenangkan permainan!")
+            print("*Bandung Bondowoso marah*")
+            print("Roro Jonggrang dikutuk menjadi candi.")
+            exit()
+        else:
+            print("Kukuruyuk.. Kukuruyuk..")
+            print("Jumlah Candi: " + str(Totcan))
+            print("Yah, Bandung Bondowoso memenangkan permainan!")
+            exit()
 
 # F13
 def load() -> str:   
