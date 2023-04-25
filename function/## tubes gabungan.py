@@ -252,7 +252,7 @@ def hapusjin():
 
         print ("Jin telah berhasil dihapus dari alam gaib.")
         pindah_matriks(jin,user,3)
-        pindah_matriks(candi_baru,candi,5)
+        pindah_matriks(candi_baru,candi)
     else:
         print("Tidak ada jin dengan username tersebut.")
 
