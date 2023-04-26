@@ -1,5 +1,6 @@
 import argparse
 import os
+import random # RNG
 from Type import effective
 
 # PRIMITIF
@@ -31,14 +32,6 @@ def find_idx(search:str, mtx:list[list], idx:int) -> int:
             return i
 
 # recursive
-# mencari ID yang kosong
-def find_ID(candi:effective, current:int) -> int:
-    for i in range (candi.NEff):
-        if candi.mtx[i][0]==str(current):
-            return find_ID(candi,current+1)
-    return current
-
-# recursive
 # menghapus salah satu anggota lalu menggeser array
 def del_mtx(mtx:list, idx:int, length:int) -> list:
     if idx<=length:
@@ -49,13 +42,30 @@ def del_mtx(mtx:list, idx:int, length:int) -> list:
     
 # recursive
 # menyisipkan candi sesuai ID agar tetap berurut
-def sisip_mtx(sisip:list, mtx:list, idx:int, length:int) -> list:
-    if length>=idx:
-        mtx[length+1]=mtx[length]
-        return sisip_mtx(sisip,mtx,idx,length-1)
-    else: 
-        mtx[length+1]=sisip
-        return mtx
+def sisip_mtx(sisip:list[str, str, str, str, str], candi:effective, idx:int, length:int) -> effective:
+    if idx>=100:
+        # jumlah candi max
+        return candi
+    else:
+        if length>=idx:
+            # belum mencapai tempat yang sesuai urutan
+            # geser ekor
+            candi.mtx[length+1]=candi.mtx[length]
+            return sisip_mtx(sisip,candi,idx,length-1)
+        else: 
+            # sisip pada tempat sesuai
+            candi.mtx[length+1]=sisip
+            # update NEff
+            candi.NEff+=1
+            return candi
+
+# recursive
+# mencari ID yang kosong
+def find_ID(candi:effective, current:int) -> int:
+    for i in range (candi.NEff):
+        if candi.mtx[i][0]==str(current):
+            return find_ID(candi,current+1)
+    return current
 
 # read csv
 def read_csv(path_csv:str) -> tuple[list,int]:
@@ -114,9 +124,9 @@ def trans_bahan(bahan:effective) -> list[list]:
 
     # load dalam keadaan kosong
     if bahan.mtx[0]==["MARK","MARK","MARK"]:
-        bahan_bangunan[0]=["pasir", "adalah pasir", "0"]
-        bahan_bangunan[1]=["batu", "adalah batu", "0"]
-        bahan_bangunan[2]=["air", "adalah air", "0"]
+        bahan_bangunan[0]=["pasir", "merekatkan batu", "0"]
+        bahan_bangunan[1]=["batu", "membentuk candi", "0"]
+        bahan_bangunan[2]=["air", "dicampur dengan pasir untuk menjadi perekat", "0"]
     else:
         bahan_bangunan[0]=bahan.mtx[0]
         bahan_bangunan[1]=bahan.mtx[1]
@@ -373,7 +383,6 @@ def ubahjin(role:str, user:effective) -> effective:
 
 # F06
 def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:str) -> tuple[effective,effective,list[list]]:
-    import random
     # update bahan, update NEff candi, cari ID terkecil candi, geser MARK candi, masukkan candi
 
     Bangun_candi = False
@@ -399,8 +408,6 @@ def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:s
             if banyak_candi==100:
                 sisa=0
             else:
-                # update NEff candi
-                candi.NEff+=1
                 sisa=100-(banyak_candi+1)
 
                 # cari ID terkecil
@@ -408,7 +415,7 @@ def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:s
 
                 # candi.mtx: [id,pembuat,pasir,batu,air]
                 # sisipkan candi
-                candi.mtx=sisip_mtx([ID_candi, username, Butuh_pasir, Butuh_batu, Butuh_air],candi.mtx,ID_candi-1,candi.NEff)
+                candi=sisip_mtx([str(ID_candi), username, str(Butuh_pasir), str(Butuh_batu), str(Butuh_air)],candi,ID_candi-1,candi.NEff)
 
             print ("Candi berhasil dibangun.")
             print (f"Sisa candi yang perlu di bangun : {sisa}.")
@@ -421,6 +428,115 @@ def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:s
         print("Role anda tidak memiliki akses membangun candi.")
     
     return (user, candi, bahan)
+
+# F08
+def batchkumpul(role:str, user:effective, bahan:list[list]) -> effective:
+    if role!="bandung_bondowoso":
+        print("Kamu tidak memiliki akses")
+    else:
+        countjinpengumpul = 0
+
+        for i in range (user.NEff):
+            if ((user.mtx[i][2]) == ("jin_pengumpul")):
+                    countjinpengumpul += 1
+
+        if countjinpengumpul == 0:
+            print("Kumpul gagal. Anda tidak punya jin pengumpul. Silahkan summon terlebih dahulu.")
+
+        else:
+            pasir, batu, air = 0, 0, 0
+            for i in range (countjinpengumpul):
+                pasir += random.randint(0,5)
+                batu += random.randint(0,5)
+                air += random.randint(0,5)
+
+            print(f"Mengerahkan {countjinpengumpul} jin untuk mengumpulkan bahan. Jin menemukan total {pasir} pasir, {batu} batu, dan {air} air.")
+
+            bahan[0][2] = str(int(bahan[0][2])+pasir)
+            bahan[1][2] = str(int(bahan[1][2])+batu)
+            bahan[2][2] = str(int(bahan[2][2])+air)
+
+    return bahan
+
+def batchbangun(role:str, user:effective, candi:effective, bahan:list[list]) -> tuple[effective, list[list]]:
+    if role!="bandung_bondowoso":
+        print("Kamu tidak memiliki akses ke fitur ini")
+    else:
+        jumlahbaris = user.NEff
+
+        # cari jumlah bahan yang dibutuhkan untuk batch bangun
+        countjinpembangun = 0
+        for i in range (jumlahbaris):
+            if ((user.mtx[i][2]) == ("jin_pembangun")):
+                    countjinpembangun += 1
+
+        if countjinpembangun == 0:
+            print("Bangun gagal. Anda tidak punya jin pembangun. Silahkan summon terlebih dahulu.")
+        else:
+            sumpasir = 0
+            sumbatu = 0
+            sumair = 0
+
+            stockpasir = int(bahan[0][2])
+            stockbatu = int(bahan[1][2])
+            stockair = int(bahan[2][2])
+
+            # placeholder bahan yang dibutuhkan
+            pasir = [0 for i in range (jumlahbaris)]
+            batu = [0 for i in range (jumlahbaris)]
+            air = [0 for i in range (jumlahbaris)]
+
+            for i in range (jumlahbaris):
+                if ((user.mtx[i][2]) == ("jin_pembangun")):
+                    usernamejin = user.mtx[i][0]
+
+                    pasir[i] = random.randint(1,5)
+                    batu[i] = random.randint(1,5)
+                    air[i] = random.randint(1,5)
+
+                    sumpasir += pasir[i]
+                    sumbatu += batu[i]
+                    sumair += air[i]
+
+            print("Mengerahkan " + str(countjinpembangun) + 
+                " jin untuk membangun candi dengan total bahan " + str(sumpasir) + " pasir, " 
+                + str(sumbatu) + " batu, dan " + str(sumair) + " air.")
+
+            selisihpasir = stockpasir-sumpasir
+            selisihbatu = stockbatu-sumbatu
+            selisihair = stockair-sumair
+
+            if (selisihpasir < 0) and (selisihbatu < 0) and (selisihair < 0):
+                print("Bangun gagal. Kurang " + str(sumpasir-stockpasir) + " pasir, " + str(sumbatu-stockbatu) + " batu, dan " 
+                    + str(sumair-stockair) + " air.")
+            elif (selisihpasir < 0) and (selisihbatu < 0):
+                print("Bangun gagal. Kurang " + str(sumpasir-stockpasir) + " pasir dan " + str(sumbatu-stockbatu) + " batu.")
+            elif (selisihpasir < 0) and (selisihair < 0):
+                print("Bangun gagal. Kurang " + str(sumpasir-stockpasir) + " pasir dan " + str(sumair-stockair) + " air.")
+            elif (selisihbatu < 0) and (selisihair < 0):
+                print("Bangun gagal. Kurang " + str(sumbatu-stockbatu) + " batu dan " + str(sumair-stockair) + " air.")
+            elif (selisihpasir < 0):
+                print("Bangun gagal. Kurang " + str(sumpasir-stockpasir) + " pasir.")
+            elif (selisihbatu < 0):
+                print("Bangun gagal. Kurang " + str(sumbatu-stockbatu) + " batu.")
+            elif (selisihair < 0):
+                print("Bangun gagal. Kurang " + str(sumair-stockair) + " air.")
+            else:
+                print("Jin berhasil membangun total " + str(countjinpembangun) + " candi.")
+                
+                for i in range (jumlahbaris):
+                    if ((user.mtx[i][2]) == ("jin_pembangun")):
+                        usernamejin = user.mtx[i][0]
+                        generate_ID = find_ID(candi,1)
+
+                        # sisip
+                        candi = sisip_mtx([str(generate_ID), usernamejin, str(pasir[i]), str(batu[i]), str(air[i])], candi, generate_ID-1, candi.NEff)
+                
+                bahan[0][2] = selisihpasir
+                bahan[1][2] = selisihbatu
+                bahan[2][2] = selisihair
+
+    return (candi, bahan)
 
 # F11
 def hancurkancandi(role:str, candi:effective) -> effective:
