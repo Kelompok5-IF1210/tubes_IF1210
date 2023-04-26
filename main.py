@@ -1,74 +1,80 @@
-from commands import csv_to_array, load, help
-
-# initiate array
-users=[None for i in range (1000)]
-candi=[None for i in range (1000)]
-bahan_bangunan=[None for i in range (1000)]
+from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, batchkumpul, batchbangun, hancurkancandi, ayamberkokok, save, help, keluar
+from tubes_IF1210.Type import effective
 
 # MAIN PROGRAM
 # F13
 path=load()
 
 # if load() success
-users=csv_to_array(path+"/user.csv")
-candi=csv_to_array(path+"/candi.csv")
-bahan_bangunan=csv_to_array(path+"/bahan_bangunan.csv")
-
-# (24-04): (temporarily) assume array good to go
+users=effective(read_csv(path+"/user.csv")[0], read_csv(path+"/user.csv")[1])
+candi=effective(read_csv(path+"/candi.csv")[0], read_csv(path+"/candi.csv")[1])
+bahan_bangunan=trans_bahan(effective(read_csv(path+"/bahan_bangunan.csv")[0], read_csv(path+"/bahan_bangunan.csv")[1]))
 
 # status
-(username,role,isLoggedIn)=('','',False)
+(username, role, isLoggedIn)=('','',False)
 
 while True:
     menu=input(">>> ")
     
     if menu=="login":
         # F01
-        pass
+        (username, role, isLoggedIn)=login(users, username, role)
+
     elif menu=="logout":
         # F02
-        pass
+        (username, role, isLoggedIn)=logout(username, role, isLoggedIn)
+
     elif menu=="summonjin":
         # F03
-        pass
+        users=summonjin(role, users)
+                
     elif menu=="hapusjin":
         # F04
-        pass
+        (users, candi)=hapusjin(role, users, candi)
+
     elif menu=="ubahjin":
         # F05
-        pass
+        users=ubahjin(role, users)
+
     elif menu=="bangun":
         # F06
-        pass
+        (users, candi, bahan_bangunan)=bangun(users, candi, bahan_bangunan, username, role)
+
     elif menu=="kumpul":
         # F07
         pass
+
     elif menu=="batchkumpul":
         # F08
-        pass
+        bahan_bangunan=batchkumpul(role, users, bahan_bangunan)
+
     elif menu=="batchbangun":
         # F08
-        pass
+        (candi, bahan_bangunan)=batchbangun(role, users, candi, bahan_bangunan)
+
     elif menu=="laporanjin":
         # F09
         pass
     elif menu=="laporancandi":
         # F10
         pass
+
     elif menu=="hancurkancandi":
         # F11
-        pass
+        candi=hancurkancandi(role, candi)
+
     elif menu=="ayamberkokok":
         # F12
-        pass
+        ayamberkokok(role, candi)
+
     elif menu=="save":
         # F14
-        pass
+        save(users, candi, bahan_bangunan)
+
     elif menu=="help":
         # F15
         help(role)
+
     elif menu=="exit":
         # F16
-        pass
-    else:
-        exit()
+        keluar(users, candi, bahan_bangunan)
