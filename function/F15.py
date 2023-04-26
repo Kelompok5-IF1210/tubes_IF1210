@@ -1,6 +1,7 @@
-def help(role):
+# F15
+def help(role:str) -> None:
     print("=========== HELP ===========")
-    if role==None:
+    if role=='':
         print("1. login")
         print("   Untuk masuk menggunakan akun")
         print("2. exit")
@@ -21,10 +22,12 @@ def help(role):
         print("6. batchbangun") 
         print("   Untuk mengerahkan semua jin pembangun membangun candi")
         print("7. laporanjin") 
-        print("   Untuk mengambil laporan knerja jin")          
+        print("   Untuk mengambil laporan kinerja jin")          
         print("8. laporancandi") 
-        print("   Untuk mengetahui progress pembangunan candi")       
-        print("9. save")
+        print("   Untuk mengetahui progress pembangunan candi")
+        print("9. exit")
+        print("   Untuk keluar dari program dan kembali ke terminal")       
+        print("10. save")
         print("   Untuk menyimpan data permainan")
     elif role=="roro_jonggrang":
         print("1. logout") 
@@ -33,19 +36,25 @@ def help(role):
         print("   Untuk menghancurkan candi yang tersedia ")
         print("3. ayamberkokok") 
         print("   Untuk menyelesaikan permainan")
-        print("4. save")
+        print("4. exit")
+        print("   Untuk keluar dari program dan kembali ke terminal")
+        print("5. save")
         print("   Untuk menyimpan data permainan")
     elif role=="jin_pengumpul":
         print("1. logout") 
         print("   Untuk keluar dari akun yang digunakan sekarang") 
         print("2. kumpul") 
         print("   Untuk mengumpulkan resource candi")
-        print("3. save")
+        print("3. exit")
+        print("   Untuk keluar dari program dan kembali ke terminal")
+        print("4. save")
         print("   Untuk menyimpan data permainan") 
     elif role=="jin_pembangun":
         print("1. logout") 
         print("   Untuk keluar dari akun yang digunakan sekarang") 
         print("2. bangun") 
         print("   Untuk membangun candi")
-        print("3. save")
+        print("3. exit")
+        print("   Untuk keluar dari program dan kembali ke terminal")
+        print("4. save")
         print("   Untuk menyimpan data permainan")
