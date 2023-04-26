@@ -190,7 +190,7 @@ def logout(username:str, role:str, isLoggedIn:bool) -> tuple[str,str,bool]:
     return (username, role, isLoggedIn)
 
 # F03
-def summonjin(users:effective) -> list[str,str,str]:
+def summonjin(role:str, users:effective) -> effective:
     # Bandung Bondowoso memiliki wewenang memanggil jin dari dunia lain. 
     # Bandung Bondowoso bisa memilih jenis jin yang ingin dipanggil. 
     # Jin harus bisa login untuk melakukan tugasnya sehingga Bondowoso harus 
@@ -198,116 +198,136 @@ def summonjin(users:effective) -> list[str,str,str]:
     # Jumlah maksimal jin yang bisa di–summon adalah 100.
 
     # ALGORITMA
-    # validasi role dan jumlah jin < 100 ada di main.py
-    # role=="bandung_bondowoso" and jumlah_jin<100
-    print("Jenis jin yang dapat dipanggil: ")
-    print("(1) Pengumpul - Bertugas mengumpulkan bahan bangunan")
-    print("(2) Pembangun - Bertugas membangun candi")
-    print("")
+    if role!="bandung_bondowoso":
+            print("Eits, kamu bukan Bandung Bondowoso!")
 
-    jenisjin = int(input("Masukkan nomor jenis jin yang ingin dipanggil: "))
-
-    # jenisjin validation loop
-    while not(jenisjin == 1) or (jenisjin == 2):
-        print("Tidak ada jenis jin bernomor " + "“" + str(jenisjin) + "”!")
-        jenisjin = int(input("Masukkan nomor jenis jin yang ingin dipanggil: "))
-
-    if (jenisjin == 1) or (jenisjin == 2):
-        # assign role
-        if jenisjin == 1:
-            kategorijin = "jin_pengumpul"
-            print("")
-            print("Memilih jin “Pengumpul”")
-            print("")
-        elif jenisjin == 2:
-            kategorijin = "jin_pembangun"
-            print("")
-            print("Memilih jin “Pembangun”")
+    else: # role=="bandung_bondowoso"
+        if (users.NEff)-2==100:
+            print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu")
+        
+        else:
+            # role=="bandung_bondowoso" and jumlah_jin<100
+            print("Jenis jin yang dapat dipanggil: ")
+            print("(1) Pengumpul - Bertugas mengumpulkan bahan bangunan")
+            print("(2) Pembangun - Bertugas membangun candi")
             print("")
 
-        # mtx_user: [username, password, role]
-        mtx_user=users.mtx
-        len_user=users.NEff
+            jenisjin = int(input("Masukkan nomor jenis jin yang ingin dipanggil: "))
 
-        usernamejin = input("Masukkan username jin: ")
-        adajin = False
+            # jenisjin validation loop
+            while not(jenisjin == 1) or (jenisjin == 2):
+                print("Tidak ada jenis jin bernomor " + "“" + str(jenisjin) + "”!")
+                jenisjin = int(input("Masukkan nomor jenis jin yang ingin dipanggil: "))
 
-        # usernamejin validation loop
-        # check overlapping username
-        for i in range (len_user):
-            if usernamejin in mtx_user[i][0]:
-                        adajin = True
+            if (jenisjin == 1) or (jenisjin == 2):
+                # assign role
+                if jenisjin == 1:
+                    kategorijin = "jin_pengumpul"
+                    print("")
+                    print("Memilih jin “Pengumpul”")
+                    print("")
+                elif jenisjin == 2:
+                    kategorijin = "jin_pembangun"
+                    print("")
+                    print("Memilih jin “Pembangun”")
+                    print("")
 
-        while (adajin == True):
-            print("")
-            print("Username " + usernamejin + " sudah diambil!")
-            usernamejin = input("Masukkan username jin: ")
+                # mtx_user: [username, password, role]
+                mtx_user=users.mtx
+                len_user=users.NEff
 
-            # re-check overlapping username
-            adajin = False
-            for i in range (len_user):
-                if usernamejin in mtx_user[i][0]:
-                            adajin = True
+                usernamejin = input("Masukkan username jin: ")
+                adajin = False
 
-        if (adajin==False):
-            passwordjin = input("Masukkan password jin: ")
+                # usernamejin validation loop
+                # check overlapping username
+                for i in range (len_user):
+                    if usernamejin in mtx_user[i][0]:
+                                adajin = True
 
-            # len passwordjin validation loop
-            while (len(passwordjin) < 5) or (len(passwordjin) > 25):
-                print("")
-                print("Password panjangnya harus 5-25 karakter!")
-                passwordjin = input("Masukkan password jin: ")
+                while (adajin == True):
+                    print("")
+                    print("Username " + usernamejin + " sudah diambil!")
+                    usernamejin = input("Masukkan username jin: ")
 
-            if (5<=len(passwordjin)<=25):
-                print("")
-                print("Mengumpulkan sesajen...")
-                print("Menyerahkan sesajen...")
-                print("Membacakan mantra...")
-                print("")
-                print("Jin " + usernamejin + " berhasil dipanggil!")       
+                    # re-check overlapping username
+                    adajin = False
+                    for i in range (len_user):
+                        if usernamejin in mtx_user[i][0]:
+                                    adajin = True
 
-    # edit ke effective (termasuk NEff) ada di main.py
-    return [usernamejin, passwordjin, kategorijin]
+                if (adajin==False):
+                    passwordjin = input("Masukkan password jin: ")
+
+                    # len passwordjin validation loop
+                    while (len(passwordjin) < 5) or (len(passwordjin) > 25):
+                        print("")
+                        print("Password panjangnya harus 5-25 karakter!")
+                        passwordjin = input("Masukkan password jin: ")
+
+                    if (5<=len(passwordjin)<=25):
+                        print("")
+                        print("Mengumpulkan sesajen...")
+                        print("Menyerahkan sesajen...")
+                        print("Membacakan mantra...")
+                        print("")
+                        print("Jin " + usernamejin + " berhasil dipanggil!")
+
+            # users.mtx=[username,password,role]
+            # asumsi tidak ada matrix yang kosong di tengah karena hapusjin() akan menggeser urutan setelah menghapus
+            # menggeser MARK
+            users.mtx[(users.NEff)+1]=users.mtx[(users.NEff)]
+                
+                # menyisipkan jin baru
+            users.mtx[(users.NEff)]=[usernamejin, passwordjin, kategorijin]
+                
+            # memperbarui user efektif
+            users.NEff+=1       
+
+    return users
 
 # F04
-def hapusjin(jin:effective, candi:effective) -> tuple[effective,effective]:
-    hapus_jin = False
-    Nama_jin = input("Masukkan username jin: ")
+def hapusjin(role:str, jin:effective, candi:effective) -> tuple[effective,effective]:
+    if role!="bandung_bondowoso":
+        print("Eits, kamu bukan Bandung Bondowoso!")
+    else:   
+        hapus_jin = False
+        Nama_jin = input("Masukkan username jin: ")
 
-    # jin.mtx: [username,password,role]
-    for i in range (jin.NEff):
-            # ngecek nama jin yang mau hapus tuh ada di matriks atau engga
-            if Nama_jin == jin.mtx[i][0] and (jin.mtx[i][2]=="jin_pembangun" or jin.mtx[i][2]=="jin_pengumpul"): 
-                hapus_jin = True
-                x = i
-                break
-
-    if hapus_jin == True :
-        for i in range (x, jin.NEff+1): # untuk ngapus jin dari matriks jin
-                jin.mtx[i] = jin.mtx[i+1] 
-                # menggeser jin ke kiri mulai dari matriks yang dihapus
-                # hingga satu indeks setelah MARK
-        jin.NEff-=1 # update NEff user
-
-        # candi.mtx: [id,pembuat,pasir,batu,air]
-        count = 0
-        for i in range (candi.NEff): # untuk ngecek ada berapa candi yang dibangun oleh jin yang mau dihapus
-            if Nama_jin == candi.mtx[i][1]:
-                count +=1
-
-        while count != 0 : # ngeloop sampe semua candi kehapus
-            count -= 1
-            for i in range (candi.NEff): 
-                if Nama_jin == candi.mtx[i][1]:
+        # jin.mtx: [username,password,role]
+        for i in range (jin.NEff):
+                # ngecek nama jin yang mau hapus tuh ada di matriks atau engga
+                if Nama_jin == jin.mtx[i][0] and (jin.mtx[i][2]=="jin_pembangun" or jin.mtx[i][2]=="jin_pengumpul"): 
+                    hapus_jin = True
                     x = i
-                    for j in range (x, candi.NEff+1): # ngegeser matriks candi
-                        candi.mtx[j] = candi.mtx[j+1]
-                    candi.NEff-=1 # update NEff candi
+                    break
 
-        print ("Jin telah berhasil dihapus dari alam gaib.")
+        if hapus_jin == True :
+            for i in range (x, jin.NEff+1): # untuk ngapus jin dari matriks jin
+                    jin.mtx[i] = jin.mtx[i+1] 
+                    # menggeser jin ke kiri mulai dari matriks yang dihapus
+                    # hingga satu indeks setelah MARK
+            jin.NEff-=1 # update NEff user
 
-    else: # hapus_jin==False
-        print("Tidak ada jin dengan username tersebut.")
+            # candi.mtx: [id,pembuat,pasir,batu,air]
+            count = 0
+            for i in range (candi.NEff): # untuk ngecek ada berapa candi yang dibangun oleh jin yang mau dihapus
+                if Nama_jin == candi.mtx[i][1]:
+                    count +=1
+
+            while count != 0 : # ngeloop sampe semua candi kehapus
+                count -= 1
+                for i in range (candi.NEff): 
+                    if Nama_jin == candi.mtx[i][1]:
+                        x = i
+                        for j in range (x, candi.NEff+1): # ngegeser matriks candi
+                            candi.mtx[j] = candi.mtx[j+1]
+                        candi.NEff-=1 # update NEff candi
+
+            print ("Jin telah berhasil dihapus dari alam gaib.")
+
+        else: # hapus_jin==False
+            print("Tidak ada jin dengan username tersebut.")
 
     return (jin, candi)
 

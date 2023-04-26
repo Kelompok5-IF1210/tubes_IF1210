@@ -26,30 +26,11 @@ while True:
 
     elif menu=="summonjin":
         # F03
-        if role!="bandung_bondowoso":
-            print("Eits, kamu bukan Bandung Bondowoso!")
-
-        else: # role=="bandung_bondowoso"
-            if (users.NEff)-2==100:
-                print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu")
-            else:
-                # users.mtx=[username,password,role]
-                # asumsi tidak ada matrix yang kosong di tengah karena hapusjin() akan menggeser urutan setelah menghapus
-                # menggeser MARK
-                users.mtx[(users.NEff)+1]=users.mtx[(users.NEff)]
-                
-                # menyisipkan jin baru
-                users.mtx[(users.NEff)]=summonjin(users)
-                
-                # memperbarui user efektif
-                users.NEff+=1
+        users=summonjin(role,users)
                 
     elif menu=="hapusjin":
         # F04
-        if role!="bandung_bondowoso":
-            print("Eits, kamu bukan Bandung Bondowoso!")
-        else:
-            (users,candi)=hapusjin(users,candi)
+        (users,candi)=hapusjin(role,users,candi)
 
     elif menu=="ubahjin":
         # F05
@@ -86,11 +67,15 @@ while True:
     elif menu=="save":
         # F14
         pass
+
     elif menu=="help":
         # F15
         help(role)
+
     elif menu=="exit":
         # F16
         pass
+
+    # temporary
     else:
         exit()
