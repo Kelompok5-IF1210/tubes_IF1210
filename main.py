@@ -1,4 +1,4 @@
-from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, batchkumpul, batchbangun, hancurkancandi, ayamberkokok, help
+from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, batchkumpul, batchbangun, hancurkancandi, ayamberkokok, save, help, keluar
 from Type import effective
 
 # MAIN PROGRAM
@@ -18,27 +18,27 @@ while True:
     
     if menu=="login":
         # F01
-        (username,role,isLoggedIn)=login(users, username, role)
+        (username, role, isLoggedIn)=login(users, username, role)
 
     elif menu=="logout":
         # F02
-        (username,role,isLoggedIn)=logout(username, role, isLoggedIn)
+        (username, role, isLoggedIn)=logout(username, role, isLoggedIn)
 
     elif menu=="summonjin":
         # F03
-        users=summonjin(role,users)
+        users=summonjin(role, users)
                 
     elif menu=="hapusjin":
         # F04
-        (users,candi)=hapusjin(role,users,candi)
+        (users, candi)=hapusjin(role, users, candi)
 
     elif menu=="ubahjin":
         # F05
-        users=ubahjin(role,users)
+        users=ubahjin(role, users)
 
     elif menu=="bangun":
         # F06
-        (users,candi,bahan_bangunan)=bangun(users,candi,bahan_bangunan, username, role)
+        (users, candi, bahan_bangunan)=bangun(users, candi, bahan_bangunan, username, role)
 
     elif menu=="kumpul":
         # F07
@@ -46,11 +46,11 @@ while True:
 
     elif menu=="batchkumpul":
         # F08
-        bahan_bangunan=batchkumpul(role,users,bahan_bangunan)
+        bahan_bangunan=batchkumpul(role, users, bahan_bangunan)
 
     elif menu=="batchbangun":
         # F08
-        (candi, bahan_bangunan)=batchbangun(role,users,candi,bahan_bangunan)
+        (candi, bahan_bangunan)=batchbangun(role, users, candi, bahan_bangunan)
 
     elif menu=="laporanjin":
         # F09
@@ -69,7 +69,7 @@ while True:
 
     elif menu=="save":
         # F14
-        pass
+        save(users, candi, bahan_bangunan)
 
     elif menu=="help":
         # F15
@@ -77,8 +77,4 @@ while True:
 
     elif menu=="exit":
         # F16
-        pass
-
-    # temporary
-    else:
-        exit()
+        keluar(users, candi, bahan_bangunan)

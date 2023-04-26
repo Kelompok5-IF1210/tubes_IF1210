@@ -4,17 +4,18 @@ import random # RNG
 from Type import effective
 
 # PRIMITIF
-# len matrix
-def mtx_len(matrix:list, mark:list) -> int:
-    iterate=-1
-    while True:
-        if matrix[iterate+1]==mark:
-            break
-        else:
-            iterate+=1
-    return iterate+1
+# recursive
+# len matrix with mark
+def mtx_len(matrix:list, mark:list, iterate:int) -> int:
+    # iterate=0
+    if matrix[iterate]==mark:
+        return iterate
+    else:
+        return mtx_len(matrix,mark,iterate+1)
 
+'''HAS NOT BEEN USED (directly determined on the code)'''
 # len of array in a determined matrix
+# array without mark
 def det_arr_len(var:str) -> int:
     if var=="users":
         return 3
@@ -23,13 +24,18 @@ def det_arr_len(var:str) -> int:
     elif var=="bahan_bangunan":
         return 3
     
-# find index from an array
-def find_idx(search:str, mtx:list[list], idx:int) -> int:
+'''HAS NOT BEEN USED'''
+# recursive
+# find index of a string (place) from an array
+def find_idx(search:str, mtx:list[list], idx:int, current:int) -> int:
     # asumsi pasti ada
     # idx: bagian array dalam matrix
-    for i in range (mtx_len(mtx,"MARK")):
-        if mtx[i][idx]==search:
-            return i
+    # current: start from 0
+    if (mtx[current][idx]==search):
+        return current
+    else:
+        return find_idx(search, mtx, idx, current+1)
+
 
 # recursive
 # menghapus salah satu anggota lalu menggeser array
@@ -69,6 +75,7 @@ def find_ID(candi:effective, current:int) -> int:
 
 # read csv
 def read_csv(path_csv:str) -> tuple[list,int]:
+    # asumsi csv selalui diakhiri newline
     file = open(path_csv,'r')
     # count line
     count=0
@@ -112,8 +119,8 @@ def read_csv(path_csv:str) -> tuple[list,int]:
         mtx_idx-=1
     
     mtx[mtx_idx+1]=["MARK" for i in range(count_delimiter+1)]
-    
-    return (mtx, mtx_idx+1)
+   
+    return (mtx, mtx_len(mtx,["MARK" for i in range (count_delimiter+1)], 0))
 
 def trans_bahan(bahan:effective) -> list[list]:
     # bahan.mtx: [nama,deskripsi,jumlah]
@@ -625,6 +632,54 @@ def load() -> str:
         print("\nFolder \""+folder_name+"\" tidak ditemukan.")
         exit()
 
+# F14
+def save(user:effective, candi:effective, bahan:list[list]) -> None:
+    folder=input("Masukkan nama folder : ")
+    # asumsi folder hanya berisi satu nama folder (not folder in folder)
+    # asumsi input valid
+
+    print("Saving...")
+    if not(os.path.isdir("save")):
+        os.mkdir("save")
+        print(f"Membuat folder save...")
+
+    if not(os.path.isdir("save/"+folder)):
+        os.mkdir("save/"+folder)
+        print(f"Membuat folder save/{folder}...")
+
+
+    # write user to csv
+    f=open("save/"+folder+"/user.csv", "w")
+    # header
+    f.write("username;password;role\n")
+    # body
+    for i in range (user.NEff):
+        line=f"{user.mtx[i][0]};{user.mtx[i][1]};{user.mtx[i][2]}\n"
+        f.write(line)
+    f.close()
+
+    # write candi to csv
+    f=open("save/"+folder+"/candi.csv", "w")
+    # header
+    f.write("id;pembuat;pasir;batu;air\n")
+    # body
+    for i in range (candi.NEff):
+        line=f"{candi.mtx[i][0]};{candi.mtx[i][1]};{candi.mtx[i][2]};{candi.mtx[i][3]};{candi.mtx[i][4]}\n"
+        f.write(line)
+    f.close()
+
+    # write bahan to csv
+    f=open("save/"+folder+"/bahan_bangunan.csv", "w")
+    # header
+    f.write("nama;deskripsi;jumlah\n")
+    # load otomatis menambah 3 line bahan
+    f.write("pasir;merekatkan batu;"+str(bahan[0][2])+"\n")
+    f.write("batu;membentuk candi;"+str(bahan[1][2])+"\n")
+    f.write("air;dicampur dengan pasir untuk menjadi perekat;"+str(bahan[2][2])+"\n")
+    f.close()
+
+    print(f"Berhasil menyimpan data di folder save/{folder}!")
+
 # F15
 def help(role:str) -> None:
     print("=========== HELP ===========")
@@ -685,3 +740,16 @@ def help(role:str) -> None:
         print("   Untuk keluar dari program dan kembali ke terminal")
         print("4. save")
         print("   Untuk menyimpan data permainan")
+
+# F16
+def keluar(user:effective, candi:effective, bahan:list[list]):
+    validasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
+
+    while not ((validasi == "y") or (validasi == "Y") or (validasi == "n") or (validasi == "N")):
+        validasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
+        
+    if (validasi == "y") or (validasi == "Y"):
+        save(user,candi,bahan)
+        exit()
+    else:
+        exit()
