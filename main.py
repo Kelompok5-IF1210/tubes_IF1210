@@ -1,14 +1,14 @@
-from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, batchkumpul, batchbangun, hancurkancandi, ayamberkokok, save, help, keluar
-from tubes_IF1210.Type import effective
+from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, kumpul, batchkumpul, batchbangun, hancurkancandi, ayamberkokok, save, help, keluar
+from Type import effective as eff
 
 # MAIN PROGRAM
 # F13
 path=load()
 
 # if load() success
-users=effective(read_csv(path+"/user.csv")[0], read_csv(path+"/user.csv")[1])
-candi=effective(read_csv(path+"/candi.csv")[0], read_csv(path+"/candi.csv")[1])
-bahan_bangunan=trans_bahan(effective(read_csv(path+"/bahan_bangunan.csv")[0], read_csv(path+"/bahan_bangunan.csv")[1]))
+users=eff(read_csv(path+"/user.csv")[0], read_csv(path+"/user.csv")[1])
+candi=eff(read_csv(path+"/candi.csv")[0], read_csv(path+"/candi.csv")[1])
+bahan_bangunan=trans_bahan(eff(read_csv(path+"/bahan_bangunan.csv")[0], read_csv(path+"/bahan_bangunan.csv")[1]))
 
 # status
 (username, role, isLoggedIn)=('','',False)
@@ -42,7 +42,7 @@ while True:
 
     elif menu=="kumpul":
         # F07
-        pass
+        bahan_bangunan=kumpul(role,bahan_bangunan)
 
     elif menu=="batchkumpul":
         # F08

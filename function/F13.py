@@ -1,11 +1,18 @@
 import argparse
 import os
-from Type import effective
+from Type import effective as eff
 
 # recursive
 # len matrix with mark
 def mtx_len(matrix:list, mark:list, iterate:int) -> int:
-    # iterate=0
+    # {menghitung panjang anggota array efektif dalam sebuah array yang diakhiri mark rekursif dengan basis anggota matriks adalah mark, dan kondisi pengulangan selama anggota matriks tidak sama dengan mark}
+    
+    # KAMUS LOKAL
+
+    # ALGORITMA
+    # pada pemanggilan pertama fungsi, 
+    # constant iterate: int = 0
+
     if matrix[iterate]==mark:
         return iterate
     else:
@@ -13,28 +20,45 @@ def mtx_len(matrix:list, mark:list, iterate:int) -> int:
 
 # read csv
 def read_csv(path_csv:str) -> tuple[list,int]:
-    # asumsi csv selalui diakhiri newline
+    # {membaca setiap line pada csv dan memasukkan data mulai dari data pertama (header tidak termasuk) ke array, lalu menyimpan NEff array}
+
+    # KAMUS LOKAL
+    # file = SEQFILE of 
+        # (*) char of line: str
+        # (1) mark
+    # count, count_delimiter, mtx_idx: int
+    # str_temp: str
+    # mtx: array [0..count_delimiter-1] of array [0..104] of str
+
+    # function mtx_len (matrix: array of array of , mark:str iterate: int) -> int
+    # {menghitung panjang anggota array efektif dalam sebuah array yang diakhiri mark
+    # rekursif dengan basis anggota matriks adalah mark, dan kondisi pengulangan selama anggota matriks tidak sama dengan mark}
+
+    # ALGORITMA
+    # asumsi: csv selalui diakhiri newline
     file = open(path_csv,'r')
     # count line
     count=0
 
+    # looping every line in file
     for line in file:
         # header
         if count==0:
             count+=1
 
-            # determine len arr needed to store the string
+            # determine how many columns there are in a file
             count_delimiter=0
             for char in line:
                 if char==";":
                     count_delimiter+=1
             # initialization of mtx
-            mtx=[["" for i in range (count_delimiter+1)] for i in range (200)]
+            mtx=[["" for i in range (count_delimiter+1)] for i in range (105)]
             mtx_idx=count-1
 
         # not header
         else:
             str_temp=""
+            # array to store per line
             arr_temp=["" for i in range (count_delimiter+1)]
             # indexing for arr_temp
             arr_idx=0
@@ -60,7 +84,7 @@ def read_csv(path_csv:str) -> tuple[list,int]:
    
     return (mtx, mtx_len(mtx,["MARK" for i in range (count_delimiter+1)], 0))
 
-def trans_bahan(bahan:effective) -> list[list]:
+def trans_bahan(bahan:eff) -> list[list]:
     # bahan.mtx: [nama,deskripsi,jumlah]
     # nama -> pasir -> batu -> air
 
