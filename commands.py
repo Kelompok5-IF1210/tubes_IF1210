@@ -461,9 +461,9 @@ def kumpul(role: eff, bahan: list[list[str]]) -> list[list[str]]:
     if role!="jin_pengumpul":
         print("Kamu tidak memiliki akses")
     else:
-        lootSand = (random.randint(0,5))
-        lootRock = (random.randint(0,5))
-        lootWater = (random.randint(0,5))
+        lootSand = (random_number(0,5))
+        lootRock = (random_number(0,5))
+        lootWater = (random_number(0,5))
 
         print(f"Jin menemukan {lootSand} pasir, {lootRock} batu, {lootWater} air")
 
