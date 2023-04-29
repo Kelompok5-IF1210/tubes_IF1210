@@ -2,7 +2,7 @@ import argparse
 import os
 import random # RNG
 from Type import effective
-
+import time
 # PRIMITIF
 # recursive
 # len matrix with mark
@@ -36,6 +36,25 @@ def find_idx(search:str, mtx:list[list], idx:int, current:int) -> int:
     else:
         return find_idx(search, mtx, idx, current+1)
 
+#RNG
+#Mengambil nomor random
+def random_number(x,y):
+    # Set konstanta
+    a = 165
+    c = 16522145
+    m = 45*4-9
+    seed = int(time.time_ns())
+
+    random = 0
+    if x == 1 :
+        for i in range (165*145):
+            random += (a *i* seed + c) % m #implementasi LCG
+        hasil = (random % y) + x #supaya output ada di rentang nilai 1 sampai 5
+    elif x == 0 :
+        for i in range (165*145):
+            random += (a *i* seed + c) % m #implementasi LCG
+        hasil = (random % y+1) + x #supaya output ada di rentang nilai 0 sampai 5
+    return hasil
 
 # recursive
 # menghapus salah satu anggota lalu menggeser array
@@ -398,9 +417,9 @@ def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:s
         Bangun_candi = True
 
     if Bangun_candi == True :
-        Butuh_pasir = random.randint(1,5)
-        Butuh_batu = random.randint(1,5)
-        Butuh_air = random.randint(1,5)
+        Butuh_pasir = random_number(1,5)
+        Butuh_batu = random_number(1,5)
+        Butuh_air = random_number(1,5)
             
         # cek persediaan
         # bahan: [nama,deskripsi,jumlah]
@@ -453,9 +472,9 @@ def batchkumpul(role:str, user:effective, bahan:list[list]) -> effective:
         else:
             pasir, batu, air = 0, 0, 0
             for i in range (countjinpengumpul):
-                pasir += random.randint(0,5)
-                batu += random.randint(0,5)
-                air += random.randint(0,5)
+                pasir += random_number(0,5)
+                batu += random_number(0,5)
+                air += random_number(0,5)
 
             print(f"Mengerahkan {countjinpengumpul} jin untuk mengumpulkan bahan. Jin menemukan total {pasir} pasir, {batu} batu, dan {air} air.")
 
@@ -497,9 +516,9 @@ def batchbangun(role:str, user:effective, candi:effective, bahan:list[list]) -> 
                 if ((user.mtx[i][2]) == ("jin_pembangun")):
                     usernamejin = user.mtx[i][0]
 
-                    pasir[i] = random.randint(1,5)
-                    batu[i] = random.randint(1,5)
-                    air[i] = random.randint(1,5)
+                    pasir[i] = random_number(1,5)
+                    batu[i] = random_number(1,5)
+                    air[i] = random_number(1,5)
 
                     sumpasir += pasir[i]
                     sumbatu += batu[i]
