@@ -1,7 +1,6 @@
 import argparse
 import os
 import random # RNG
-from Type import effective
 import time
 from Type import effective as eff
 
