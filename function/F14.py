@@ -1,16 +1,21 @@
 # F14
 import os
-from tubes_IF1210.Type import effective
+from Type import effective as eff
 
-def save(user:effective, candi:effective, bahan:list[list]):
+def save(user:eff, candi:eff, bahan:list[list]) -> None:
     folder=input("Masukkan nama folder : ")
     # asumsi folder hanya berisi satu nama folder (not folder in folder)
+    # asumsi input valid
 
+    print("Saving...")
     if not(os.path.isdir("save")):
         os.mkdir("save")
+        print(f"Membuat folder save...")
 
     if not(os.path.isdir("save/"+folder)):
         os.mkdir("save/"+folder)
+        print(f"Membuat folder save/{folder}...")
+
 
     # write user to csv
     f=open("save/"+folder+"/user.csv", "w")
@@ -41,3 +46,5 @@ def save(user:effective, candi:effective, bahan:list[list]):
     f.write("batu;membentuk candi;"+str(bahan[1][2])+"\n")
     f.write("air;dicampur dengan pasir untuk menjadi perekat;"+str(bahan[2][2])+"\n")
     f.close()
+
+    print(f"Berhasil menyimpan data di folder save/{folder}!")

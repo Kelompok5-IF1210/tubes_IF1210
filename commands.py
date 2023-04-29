@@ -3,6 +3,8 @@ import os
 import random # RNG
 from Type import effective
 import time
+from Type import effective as eff
+
 # PRIMITIF
 # recursive
 # len matrix with mark
@@ -67,7 +69,7 @@ def del_mtx(mtx:list, idx:int, length:int) -> list:
     
 # recursive
 # menyisipkan candi sesuai ID agar tetap berurut
-def sisip_mtx(sisip:list[str, str, str, str, str], candi:effective, idx:int, length:int) -> effective:
+def sisip_mtx(sisip:list[str, str, str, str, str], candi:eff, idx:int, length:int) -> eff:
     if idx>=100:
         # jumlah candi max
         return candi
@@ -86,7 +88,7 @@ def sisip_mtx(sisip:list[str, str, str, str, str], candi:effective, idx:int, len
 
 # recursive
 # mencari ID yang kosong
-def find_ID(candi:effective, current:int) -> int:
+def find_ID(candi:eff, current:int) -> int:
     for i in range (candi.NEff):
         if candi.mtx[i][0]==str(current):
             return find_ID(candi,current+1)
@@ -141,7 +143,7 @@ def read_csv(path_csv:str) -> tuple[list,int]:
    
     return (mtx, mtx_len(mtx,["MARK" for i in range (count_delimiter+1)], 0))
 
-def trans_bahan(bahan:effective) -> list[list]:
+def trans_bahan(bahan:eff) -> list[list]:
     # bahan.mtx: [nama,deskripsi,jumlah]
     # nama -> pasir -> batu -> air
 
@@ -162,7 +164,7 @@ def trans_bahan(bahan:effective) -> list[list]:
 '''___________________________________________________BREAKDOWN___________________________________________________'''
 
 # F01
-def login(users:effective, user_now:str, role_now: str) -> tuple[str,str,bool]:
+def login(users:eff, user_now:str, role_now: str) -> tuple[str,str,bool]:
     # login status
     if role_now=="": 
         belumlogin=True
@@ -226,7 +228,7 @@ def logout(username:str, role:str, isLoggedIn:bool) -> tuple[str,str,bool]:
     return (username, role, isLoggedIn)
 
 # F03
-def summonjin(role:str, users:effective) -> effective:
+def summonjin(role:str, users:eff) -> eff:
     # Bandung Bondowoso memiliki wewenang memanggil jin dari dunia lain. 
     # Bandung Bondowoso bisa memilih jenis jin yang ingin dipanggil. 
     # Jin harus bisa login untuk melakukan tugasnya sehingga Bondowoso harus 
@@ -323,7 +325,7 @@ def summonjin(role:str, users:effective) -> effective:
     return users
 
 # F04
-def hapusjin(role:str, jin:effective, candi:effective) -> tuple[effective,effective]:
+def hapusjin(role:str, jin:eff, candi:eff) -> tuple[eff,eff]:
     if role!="bandung_bondowoso":
         print("Eits, kamu bukan Bandung Bondowoso!")
     else:   
@@ -368,7 +370,7 @@ def hapusjin(role:str, jin:effective, candi:effective) -> tuple[effective,effect
     return (jin, candi)
 
 # F05
-def ubahjin(role:str, user:effective) -> effective:
+def ubahjin(role:str, user:eff) -> eff:
     if role!="bandung_bondowoso":
         print("Kamu tidak memiliki akses ke fitur ini!")
     else:
@@ -408,7 +410,7 @@ def ubahjin(role:str, user:effective) -> effective:
     return user
 
 # F06
-def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:str) -> tuple[effective,effective,list[list]]:
+def bangun(user:eff,candi:eff,bahan:list[list], username:str, role:str) -> tuple[eff,eff,list[list]]:
     # update bahan, update NEff candi, cari ID terkecil candi, geser MARK candi, masukkan candi
 
     Bangun_candi = False
@@ -455,8 +457,25 @@ def bangun(user:effective,candi:effective,bahan:list[list], username:str, role:s
     
     return (user, candi, bahan)
 
+# F07
+def kumpul(role: eff, bahan: list[list[str]]) -> list[list[str]]:
+    if role!="jin_pengumpul":
+        print("Kamu tidak memiliki akses")
+    else:
+        lootSand = (random.randint(0,5))
+        lootRock = (random.randint(0,5))
+        lootWater = (random.randint(0,5))
+
+        print(f"Jin menemukan {lootSand} pasir, {lootRock} batu, {lootWater} air")
+
+        bahan[0][2] = str(int(bahan[0][2]) + lootSand)
+        bahan[1][2] = str(int(bahan[1][2]) + lootRock)
+        bahan[2][2] = str(int(bahan[2][2]) + lootWater)
+
+    return bahan
+
 # F08
-def batchkumpul(role:str, user:effective, bahan:list[list]) -> effective:
+def batchkumpul(role:str, user:eff, bahan:list[list]) -> eff:
     if role!="bandung_bondowoso":
         print("Kamu tidak memiliki akses")
     else:
@@ -484,7 +503,7 @@ def batchkumpul(role:str, user:effective, bahan:list[list]) -> effective:
 
     return bahan
 
-def batchbangun(role:str, user:effective, candi:effective, bahan:list[list]) -> tuple[effective, list[list]]:
+def batchbangun(role:str, user:eff, candi:eff, bahan:list[list]) -> tuple[eff, list[list]]:
     if role!="bandung_bondowoso":
         print("Kamu tidak memiliki akses ke fitur ini")
     else:
@@ -565,7 +584,7 @@ def batchbangun(role:str, user:effective, candi:effective, bahan:list[list]) -> 
     return (candi, bahan)
 
 # F11
-def hancurkancandi(role:str, candi:effective) -> effective:
+def hancurkancandi(role:str, candi:eff) -> eff:
     if role!="roro_jonggrang":
         print("Kamu tidak memiliki akses fitur ini!")
     else:
@@ -596,7 +615,7 @@ def hancurkancandi(role:str, candi:effective) -> effective:
     return candi
 
 # F12
-def ayamberkokok(role:str, candi:effective) -> None:
+def ayamberkokok(role:str, candi:eff) -> None:
     if role!="roro_jonggrang":
         print("Kamu tidak punya akses ke fitur ini")
     else:
@@ -652,7 +671,7 @@ def load() -> str:
         exit()
 
 # F14
-def save(user:effective, candi:effective, bahan:list[list]) -> None:
+def save(user:eff, candi:eff, bahan:list[list]) -> None:
     folder=input("Masukkan nama folder : ")
     # asumsi folder hanya berisi satu nama folder (not folder in folder)
     # asumsi input valid
@@ -761,7 +780,7 @@ def help(role:str) -> None:
         print("   Untuk menyimpan data permainan")
 
 # F16
-def keluar(user:effective, candi:effective, bahan:list[list]):
+def keluar(user:eff, candi:eff, bahan:list[list]):
     validasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
 
     while not ((validasi == "y") or (validasi == "Y") or (validasi == "n") or (validasi == "N")):
