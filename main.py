@@ -1,4 +1,4 @@
-from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, kumpul, batchkumpul, batchbangun, hancurkancandi, ayamberkokok, save, help, keluar
+from commands import read_csv, trans_bahan, load, login, logout, summonjin, hapusjin, ubahjin, bangun, kumpul, batchkumpul, batchbangun, laporanjin, laporancandi, hancurkancandi, ayamberkokok, save, help, keluar
 from Type import effective as eff
 
 # MAIN PROGRAM
@@ -54,10 +54,11 @@ while True:
 
     elif menu=="laporanjin":
         # F09
-        pass
+        laporanjin(role, users, bahan_bangunan)
+
     elif menu=="laporancandi":
         # F10
-        pass
+        laporancandi(role, candi)
 
     elif menu=="hancurkancandi":
         # F11
