@@ -1,6 +1,4 @@
-# Bandung Bondowoso, Roro Jonggrang, dan para jin pekerja bisa melakukan 
-# login ke dalam sistem. Pesan kesalahan mencakup kasus username tidak terdaftar 
-# dan password yang salah. Pengguna tidak bisa menggunakan command login, setelah berhasil melakukan login.
+from Type import effective as eff
 
 def login(users:eff, user_now:str, role_now: str) -> tuple[str,str,bool]:
     # login status
