@@ -1,72 +1,49 @@
-import random
-def csv_to_array(filecsv):
-    arraybaru = []
-    with open(filecsv, 'r') as file:
-        dlmtandapetik = False   # (cek dia di dalam "" or no)
-        cell_data = '' 
-        row_data = [] 
-        for char in file.read():
-            if char == ';' and not dlmtandapetik:
-                if cell_data != '':
-                    row_data += [cell_data]
-                cell_data =""
-            elif char == '\n' and not dlmtandapetik:
-                if cell_data != '':
-                    row_data += [cell_data]
-                arraybaru += [row_data]
-                row_data = []
-                cell_data =""
-            elif char == '"':
-                dlmtandapetik = not dlmtandapetik
-            else:
-                cell_data += char
-        if cell_data != '':
-            row_data += [cell_data]
-        if row_data != []:
-            arraybaru += [row_data]
-    return arraybaru
+from Type import effective as eff
+from commands import random_number, find_ID, sisip_mtx
 
-def lenn(string):
-    count = 0
-    for i in string:
-        count += 1
-    return count
+def bangun(user:eff,candi:eff,bahan:list[list], username:str, role:str) -> tuple[eff,eff,list[list]]:
+    # update bahan, update NEff candi, cari ID terkecil candi, geser MARK candi, masukkan candi
 
-def bangun():
-    candi = csv_to_array("candi.csv")
-    bahan_bangunan = csv_to_array("Bahan_bangunan.csv")
-    jin_data = csv_to_array("usnm.csv")
-    idx_jin = lenn(jin_data)
-
-    Nama = jin_data[idx_jin-1][0]
     Bangun_candi = False
-    for i in range (1, lenn(jin_data)):
-        if Nama == jin_data[i][0] and jin_data[i][2] == "jin pembangun":
-            Bangun_candi = True
+    # cek role
+    if role=="jin_pembangun":
+        Bangun_candi = True
 
     if Bangun_candi == True :
-        Butuh_pasir = random.randint(1,5)
-        Butuh_batu = random.randint(1,5)
-        Butuh_air = random.randint(1,5)
+        Butuh_pasir = random_number(1,5)
+        Butuh_batu = random_number(1,5)
+        Butuh_air = random_number(1,5)
             
-        if Butuh_pasir <= int(bahan_bangunan[0][2]) and Butuh_batu <= int(bahan_bangunan[1][2]) and Butuh_air <= int(bahan_bangunan[2][2]):
-            bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - Butuh_pasir 
-            bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - Butuh_batu
-            bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - Butuh_air
-            x = lenn(candi)-1
-            candi_baru =[[" " for spek in range(5)]for jumlah in range (1)]
-            candi_baru[0][0] = x+1
-            candi_baru[0][1] = Nama
-            candi_baru[0][2] = Butuh_pasir
-            candi_baru[0][3] = Butuh_batu
-            candi_baru[0][4] = Butuh_air
-            
-            candi += candi_baru
+        # cek persediaan
+        # bahan: [nama,deskripsi,jumlah]
+        # nama -> pasir -> batu -> air
+        if Butuh_pasir <= int(bahan[0][2]) and Butuh_batu <= int(bahan[1][2]) and Butuh_air <= int(bahan[2][2]):
+            # update bahan
+            bahan[0][2] = int(bahan[0][2]) - Butuh_pasir 
+            bahan[1][2] = int(bahan[1][2]) - Butuh_batu
+            bahan[2][2] = int(bahan[2][2]) - Butuh_air
 
-            sisa = 100 - lenn(candi)+1
-            print ("Candi berhasil dibangun")
-            print (f"Sisa candi yang perlu di bangun : {sisa}")
+            banyak_candi = candi.NEff
+            if banyak_candi==100:
+                sisa=0
+            else:
+                sisa=100-(banyak_candi+1)
+
+                # cari ID terkecil
+                ID_candi=find_ID(candi, 1)
+
+                # candi.mtx: [id,pembuat,pasir,batu,air]
+                # sisipkan candi
+                candi=sisip_mtx([str(ID_candi), username, str(Butuh_pasir), str(Butuh_batu), str(Butuh_air)],candi,ID_candi-1,candi.NEff)
+
+            print ("Candi berhasil dibangun.")
+            print (f"Sisa candi yang perlu di bangun: {sisa}.")
+
         else : 
-            print ("Candi tidak bisa dibangun")
+            print("Bahan bangunan tidak mencukupi.")
+            print ("Candi tidak bisa dibangun.")
+
     else :
-        print("Role anda tidak memiliki akses membangun candi")
+        print("Role anda tidak memiliki akses membangun candi.")
+    
+    return (user, candi, bahan)
