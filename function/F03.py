@@ -6,7 +6,7 @@ def summonjin(role:str, users:eff) -> eff:
 
     else: # role=="bandung_bondowoso"
         if (users.NEff)-2==100:
-            print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu")
+            print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu.")
         
         else:
             # role=="bandung_bondowoso" and jumlah_jin<100
