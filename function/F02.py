@@ -6,6 +6,6 @@ def logout(username:str, role:str, isLoggedIn:bool) -> tuple[str,str,bool]:
         print("Berhasil logout")
     else:
         print("Logout gagal!")
-        print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
+        print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout.")
     
     return (username, role, isLoggedIn)
