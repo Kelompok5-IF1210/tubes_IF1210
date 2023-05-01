@@ -13,29 +13,6 @@ def mtx_len(matrix:list, mark:list, iterate:int) -> int:
     else:
         return mtx_len(matrix,mark,iterate+1)
 
-'''HAS NOT BEEN USED (directly determined on the code)'''
-# len of array in a determined matrix
-# array without mark
-def det_arr_len(var:str) -> int:
-    if var=="users":
-        return 3
-    elif var=="candi":
-        return 5
-    elif var=="bahan_bangunan":
-        return 3
-    
-'''HAS NOT BEEN USED'''
-# recursive
-# find index of a string (place) from an array
-def find_idx(search:str, mtx:list[list], idx:int, current:int) -> int:
-    # asumsi pasti ada
-    # idx: bagian array dalam matrix
-    # current: start from 0
-    if (mtx[current][idx]==search):
-        return current
-    else:
-        return find_idx(search, mtx, idx, current+1)
-
 # recursive
 # how many candi has a jin built
 def count_candi(nama_jin: str, candi: eff, idx: int, found:int) -> int:
