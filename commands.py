@@ -36,6 +36,20 @@ def find_idx(search:str, mtx:list[list], idx:int, current:int) -> int:
     else:
         return find_idx(search, mtx, idx, current+1)
 
+# recursive
+# how many candi has a jin built
+def count_candi(nama_jin: str, candi: eff, idx: int, found:int) -> int:
+    # first call: idx=0, found=0
+    if idx==(candi.NEff)-1:
+        if candi.mtx[idx][1]==nama_jin:
+            return found+1
+        else:
+            return found
+    else:
+        if candi.mtx[idx][1]==nama_jin:
+            found+=1
+        return count_candi(nama_jin, candi, idx+1, found)
+
 #RNG
 #Mengambil nomor random
 def random_number(x,y):
@@ -582,7 +596,7 @@ def batchbangun(role:str, user:eff, candi:eff, bahan:list[list]) -> tuple[eff, l
     return (candi, bahan)
 
 # F09
-def laporanjin (role: str, inputedUser: eff, inputedlooting: list[list[str]]) -> None :
+def laporanjin (role: str, inputedUser: eff, inputedCandi: eff, inputedlooting: list[list[str]]) -> None :
     # JINN COUNTER USER
     if role == "bandung_bondowoso":
         print("")
@@ -607,16 +621,45 @@ def laporanjin (role: str, inputedUser: eff, inputedlooting: list[list[str]]) ->
         for i in range (105):
             if inputedUser.mtx[i] == ["MARK", "MARK", "MARK"]:
                 jinTot = i-2
-                
-                if jinTot != (count1) + (count2):
-                    print("NINUNINUNINU")
         
         print(f"> Total Jin: {jinTot}")
         print(f"> Total Jin Pengumpul: {count1}")
         print(f"> Total Jin Pembangun: {count2}")
 
-        print(f"> Jin Terajin: ")
-        print(f"> Jin Termalas: ")
+        if inputedUser.NEff==2 or inputedCandi.NEff==0:
+            print("> Jin Terajin: -")
+            print("> Jin Termalas: -")
+        else:
+            # array jumlah candi per jin
+            num_built=[0 for i in range (inputedUser.NEff)]
+            
+            # dari indeks 2, menghindari Bandung dan Roro
+            for i in range (2,inputedUser.NEff):
+                num_built[i]=count_candi(inputedUser.mtx[i][0], inputedCandi, 0, 0)
+            
+            '''debug'''
+            print(num_built)
+
+            # see terajin termalas
+            terajin=""
+            termalas=""
+            count_rajin=(-1)
+            count_malas=120
+            for i in range (2, inputedUser.NEff):
+                '''debug'''
+                print(inputedUser.mtx[i][0], inputedUser.mtx[i][2], num_built[i])
+
+                # update malas jin pembangun -> (lebih malas or leksikal tinggi)
+                if inputedUser.mtx[i][2]=="jin_pembangun" and (num_built[i]<count_malas or (num_built[i]==count_malas and inputedUser.mtx[i][0]>termalas)):
+                    termalas=inputedUser.mtx[i][0]
+                    count_malas=num_built[i]
+                # update rajin (lebih rajin or leksikal rendah)
+                if num_built[i]>count_rajin or (num_built[i]==count_rajin and inputedUser.mtx[i][0]<terajin):
+                    terajin=inputedUser.mtx[i][0]
+                    count_rajin=num_built[i]
+            
+            print(f"> Jin Terajin: {terajin}")
+            print(f"> Jin Termalas: {termalas}")
 
         ## LOOT COUNTER
         sandData = int(inputedlooting[0][2])

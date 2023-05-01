@@ -54,7 +54,7 @@ while True:
 
     elif menu=="laporanjin":
         # F09
-        laporanjin(role, users, bahan_bangunan)
+        laporanjin(role, users, candi, bahan_bangunan)
 
     elif menu=="laporancandi":
         # F10

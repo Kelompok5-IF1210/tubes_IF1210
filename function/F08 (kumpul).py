@@ -1,6 +1,5 @@
 from Type import effective as eff
-from commands import random_number, find_ID, sisip_mtx
-from main import bahan_bangunan
+from commands import random_number
 
 # batch kumpul
 def batchkumpul(role:str, user:eff, bahan:list[list]) -> eff:
