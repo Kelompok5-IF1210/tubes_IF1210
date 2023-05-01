@@ -1,97 +1,78 @@
-# len
-def lenn(string):
-    count = 0
-    for i in string:
-        count += 1
-    return count
-# Append
-def appendx(listlama, ygmauditambah):
-    listbaru = [None] * (lenn(listlama) + 1)
+from Type import effective as eff
+from commands import count_candi
 
-    for i in range(lenn(listlama)):
-        listbaru[i] = listlama[i]
-
-    listbaru[lenn(listlama)] = ygmauditambah
-
-    return listbaru
-
-# algoritma utama
-def laporanjin (role,inputedUser, inputedlooting, candiarry) :
+def laporanjin (role: str, inputedUser: eff, inputedCandi: eff, inputedlooting: list[list[str]]) -> None :
     # JINN COUNTER USER
     if role == "bandung_bondowoso":
-        jumlahbaris = lenn(inputedUser)
+        print("")
+        jumlahbaris = inputedUser.NEff
         
+        # jumlah jin pengumpul
         count1 = 0
         for i in range (jumlahbaris):
-            if inputedUser[i][2] == "jin_pengumpul":
+            if inputedUser.mtx[i][2] == "jin_pengumpul":
                 count1 += 1
             else:
                 count1 += 0
         
+        # jumlah jin pembangun
         count2 = 0
         for i in range (jumlahbaris):
-            if inputedUser[i][2] == "jin_pemabangun":
+            if inputedUser.mtx[i][2] == "jin_pembangun":
                 count2 += 1
             else:
                 count2 += 0
         
-        jinTot = (count1) + (count2)
+        for i in range (105):
+            if inputedUser.mtx[i] == ["MARK", "MARK", "MARK"]:
+                jinTot = i-2
         
+        print(f"> Total Jin: {jinTot}")
+        print(f"> Total Jin Pengumpul: {count1}")
+        print(f"> Total Jin Pembangun: {count2}")
+
+        if inputedUser.NEff==2 or inputedCandi.NEff==0:
+            print("> Jin Terajin: -")
+            print("> Jin Termalas: -")
+        else:
+            # array jumlah candi per jin
+            num_built=[0 for i in range (inputedUser.NEff)]
+            
+            # dari indeks 2, menghindari Bandung dan Roro
+            for i in range (2,inputedUser.NEff):
+                num_built[i]=count_candi(inputedUser.mtx[i][0], inputedCandi, 0, 0)
+            
+            '''debug'''
+            print(num_built)
+
+            # see terajin termalas
+            terajin=""
+            termalas=""
+            count_rajin=(-1)
+            count_malas=120
+            for i in range (2, inputedUser.NEff):
+                '''debug'''
+                print(inputedUser.mtx[i][0], inputedUser.mtx[i][2], num_built[i])
+
+                # update malas jin pembangun -> (lebih malas or leksikal tinggi)
+                if inputedUser.mtx[i][2]=="jin_pembangun" and (num_built[i]<count_malas or (num_built[i]==count_malas and inputedUser.mtx[i][0]>termalas)):
+                    termalas=inputedUser.mtx[i][0]
+                    count_malas=num_built[i]
+                # update rajin (lebih rajin or leksikal rendah)
+                if num_built[i]>count_rajin or (num_built[i]==count_rajin and inputedUser.mtx[i][0]<terajin):
+                    terajin=inputedUser.mtx[i][0]
+                    count_rajin=num_built[i]
+            
+            print(f"> Jin Terajin: {terajin}")
+            print(f"> Jin Termalas: {termalas}")
+
         ## LOOT COUNTER
         sandData = int(inputedlooting[0][2])
         rockData = int(inputedlooting[1][2])
         waterData = int(inputedlooting[2][2])
-        # Jin array dan hasil buatan
-        jinarry = ["" for i in range (1000)]
-        candifromjin = [0 for i in range (1000)]
-        buildedcandi = 0
-        
-        for i in range (1000):
-            if inputedUser[i][2] == "jin_pembangun":
-                jinarry[buildedcandi] = role[i][0]
-                buildedcandi += 1
-        
-        for i in range (1000):
-            for j in range (200):
-                if candiarry[j] != ["","","","",""]:
-                    if candiarry[j][i] == jinarry[i]:
-                        candifromjin[i] += 1
-        sortedjinarry = []
-        identification = ["A","a","B","b","C","c","D","d","E","e","F","f","G","g","H","h"
-                        ,"I","i","J","j","K","k","L","l","M","m","N","n","O","o","P","p"
-                        ,"Q","q","R","r","S","s","T","t","U","u","V","v","W","w","X","x"
-                        ,"Y","y","Z","z"]
-        c = 0
-        while 52 > c :
-            for j in range (count2) :
-                if jinarry[j][0] == identification[c] or jinarry[j][0] == identification[c + 1]:
-                    appendx(sortedjinarry,jinarry[j])
-            c += 2
-        jinarry == sortedjinarry
-        
-        max = candifromjin[0]
-        min = candifromjin[0]
-        rajin = jinarry[0]
-        malas = jinarry[0]
-        
-        # Searcher rajin malas
-        for i in range (count2):
-            if jinarry[i] != "":
-                if candifromjin[i] > max:
-                    max = candifromjin[i]
-                    rajin = jinarry[i]
-        
-        for i in range (count2):
-            if jinarry[i] != "":
-                min = candifromjin[i]
-                malas = jinarry[i]
-        print(f"> Total jin: {jinTot}")
-        print(f"> Total jin pengumpul: {count1}")
-        print(f"Total jin pembangun: {count2}")
-        print (f"Jin terajin: {rajin}")
-        print (f"Jin termalas: {malas}")
-        print(f"Jumlah pasir {sandData} unit")
-        print(f"Jumlah batu {rockData} unit")
-        print(f"Jumlah air {waterData} unit")
+        print(f"> Jumlah Pasir: {sandData} unit")
+        print(f"> Jumlah Batu: {rockData} unit")
+        print(f"> Jumlah Air: {waterData} unit")        
+    
     else: 
         print("Laporan candi hanya bisa diakses oleh akun Bandung Bondowoso.")
