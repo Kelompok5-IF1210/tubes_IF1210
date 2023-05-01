@@ -1,21 +1,15 @@
-# Prosedur ini digunakan untuk keluar dari permainan. Sebelum keluar dari program, 
-# pemain akan diberikan opsi untuk melakukan prosedur save atau tidak. 
-# Input dapat berupa huruf besar ataupun kecil. Input harus dipastikan valid. 
-# Jika input tidak valid, prosedur akan menanyakan ulang hingga input menjadi valid.
+from Type import effective as eff
+from commands import save
 
-def save():
-    print("*otw ke function save*")
-
-command = input(">>> ")
-
-if command == "exit":
+# F16
+def keluar(user:eff, candi:eff, bahan:list[list]):
     validasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
 
     while not ((validasi == "y") or (validasi == "Y") or (validasi == "n") or (validasi == "N")):
         validasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
-    
-
-if (validasi == "y") or (validasi == "Y"):
-    save()
-else:
-    exit
+        
+    if (validasi == "y") or (validasi == "Y"):
+        save(user,candi,bahan)
+        exit()
+    else:
+        exit()

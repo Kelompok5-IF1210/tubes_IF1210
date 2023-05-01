@@ -636,9 +636,6 @@ def laporanjin (role: str, inputedUser: eff, inputedCandi: eff, inputedlooting: 
             # dari indeks 2, menghindari Bandung dan Roro
             for i in range (2,inputedUser.NEff):
                 num_built[i]=count_candi(inputedUser.mtx[i][0], inputedCandi, 0, 0)
-            
-            '''debug'''
-            print(num_built)
 
             # see terajin termalas
             terajin=""
@@ -646,9 +643,6 @@ def laporanjin (role: str, inputedUser: eff, inputedCandi: eff, inputedlooting: 
             count_rajin=(-1)
             count_malas=120
             for i in range (2, inputedUser.NEff):
-                '''debug'''
-                print(inputedUser.mtx[i][0], inputedUser.mtx[i][2], num_built[i])
-
                 # update malas jin pembangun -> (lebih malas or leksikal tinggi)
                 if inputedUser.mtx[i][2]=="jin_pembangun" and (num_built[i]<count_malas or (num_built[i]==count_malas and inputedUser.mtx[i][0]>termalas)):
                     termalas=inputedUser.mtx[i][0]
