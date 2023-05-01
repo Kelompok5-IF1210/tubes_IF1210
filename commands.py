@@ -670,7 +670,7 @@ def laporanjin (role: str, inputedUser: eff, inputedCandi: eff, inputedlooting: 
         print(f"> Jumlah Air: {waterData} unit")        
     
     else: 
-        print("Laporan candi hanya bisa diakses oleh akun Bandung Bondowoso.")
+        print("Laporan jin hanya bisa diakses oleh akun Bandung Bondowoso.")
 
 # F10
 def laporancandi (role: str, inputedcandi: eff) -> None:
