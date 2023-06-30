@@ -711,8 +711,8 @@ def hancurkancandi(role:str, candi:eff) -> eff:
         else:
             Se7 = input(f"Apakah anda yakin ingin menghancurkan candi ID: {id} (Y/N)? ")
             if Se7 == "Y":
-                for i in range (candi.NEff): 
-                    if candi.mtx[i][0] == id:
+                for i in range (candi.NEff-1): 
+                    if int(candi.mtx[i][0]) == id:
                         candi.mtx = del_mtx(candi.mtx,i,candi.NEff) # geser candi
                         candi.NEff-=1 # update NEff candi
                 print("Candi telah berhasil dihancurkan.")
